@@ -1,28 +1,26 @@
 # Verification report
 
-Verified on 2026-09-30 using Node24.19.0.
+## Math and source checks (2026-09-30)
 
-## Passed
+- `npm test`: nine test groups passed
+- JS syntax and `git diff --check` passed
+- Exact score/minimum-cost results vs exhaustive **test-only** oracle for all budgets0–100, caps2/4/7/11, all three activities
+- Current minima, irrelevant-stat spending, zero/full budgets, deterministic ties, invalid inputs, bonuses and greedy counterexample
+- All130 cost entries and400 normal/transcended level budgets match pinned RO-help-tool tables
+- Wiki source review checked all10 Rune recipes/minimumskills/ranks and17 potion entries; independent review confirmed coefficients/modifier tables
+- Rune test: mastery10/job70/Ancient/Verkana,DEX90LUK100→80 raw; Mystic→110 raw, deliberately no undocumented clamp
+- Potion test: PP10/Research10/Instruction5/Job70,DEX90LUK100INT50/Red→95.5..105.5 raw
+- Verified fixed offsets/recipe endpoints change displayed output but not raw-optimal stat allocation
+- Source arithmetic, formula uncertainty and rAthena differences documented in SOURCE_NOTES.md
 
-- `npm test`: six test groups, all passed
-- `node --check app.js` and `node --check optimizer.js`
-- Exact score/minimum-cost results vs exhaustive **test-only** oracle: all budgets0–100, caps2/4/7/11, all three activities
-- Current minimum stats, non-relevant stat spending, zero/full budgets, deterministic ties, input rejection, fixed bonuses and greedy-failure regression
-- Source parity: all130 upgrade-cost values, all400 normal/transcended level budgets
-- Original Python DP parity:18 cases (three activities, levels99/150/200, normal/transcended), rate error below1e−9
-- jsdom smoke: default rates83.20/80.40/74.70; blank-input validation and stale-result clearing; class locks and rebirth; zero budget; overspending rejection; current-stat preservation; reset mode; positive/negative bonuses; repeated resets; persistence
-- Default frontend has no external runtime dependencies and uses relative asset paths
+## DOM smoke
 
-## Performance sample
+jsdom smoke passed defaults69.80/80.40/85.70–95.70,10 Rune/17 potion recipes, skill/material updates, minimumskills, blank/invalid input and stale-result clearing, raw>100, class/rebirth locks, zero/over budget, current/reset stats, positive/negative bonuses, repeated actions and persisted-formula sanitization. DOM tests do not substitute for visual rendering.
 
-Node24 cloud machine; warmup100 cycles, measured500 solves per activity at level200, transcended, cap130:
+## Browser/deployment verification
 
-- Rune:0.305ms mean,17030 transitions
-- Poison:0.329ms mean,17030 transitions
-- Potion:0.964ms mean,50697 transitions
+The earlier base release was verified in the deployed cloud browser at1165px, including no horizontal overflow and live validation/class/reset/persistence. Narrow mobile rendering has not been directly verified. Local Chromium is unavailable because of environment socket restrictions; live deployment is the supported visual-check route. Consult the GitHub Actions run for this exact commit to verify tests and publication; do not infer deployment success from this file alone.
 
-These measurements describe this machine only. UI displays its actual calculation timing.
+## Performance
 
-## Not yet verified
-
-Rendered desktop/mobile visual QA and actual GitHub Pages deployment. Local Chromium launch was blocked by environment socket restrictions; managed cloud browser rejected localhost preview with ERR_BLOCKED_BY_CLIENT. DOM smoke is not a substitute for visual browser testing. Verify the published page at desktop and narrow mobile widths once hosting is available.
+The score-indexed algorithm uses at most645 score units and three stats. Representative original-core Node24 benchmark (500 solves afterwarmup) was0.3–1ms per activity. Actual app timing varies bydevice and now includes formula validation; the UI displays measured timing. No fixed latency is guaranteed.

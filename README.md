@@ -1,6 +1,6 @@
 # RO Best Status
 
-เว็บภาษาไทยสำหรับหา Status ที่ดีที่สุดในการ **สร้าง Rune**, **ทำยาแอส (Poison)** และ **ปรุงยา (Potion)** ตามสูตรของ [econDS/RO-help-tool](https://github.com/econDS/RO-help-tool/tree/1cc20f489887228eec0ff5b91e4c5fe71c75961f)
+เว็บภาษาไทยสำหรับหา Status ที่ดีที่สุดในการ **สร้าง Rune**, **ทำยาแอส (Poison)** และ **ปรุงยา (Potion)** ตามสูตรที่เผยแพร่บน **iRO Wiki** โดยใช้ต้นทุน/งบ Status จาก [econDS/RO-help-tool](https://github.com/econDS/RO-help-tool/tree/1cc20f489887228eec0ff5b91e4c5fe71c75961f)
 
 - Static HTML/CSS/JavaScript, ไม่มี backend หรือ runtime dependency
 - รันใน browser และ deploy บน GitHub Pages ได้
@@ -9,15 +9,27 @@
 - โบนัส Status คงที่ไม่เสียแต้ม และไม่เปลี่ยนลำดับคำตอบที่ดีที่สุด
 - ใช้ **exact dynamic programming แบบ score-indexed**, ไม่ใช้ brute force หรือ greedy approximation
 
-## ขอบเขตของสูตร
+## สูตรที่ตรวจเทียบกับ iRO Wiki
 
-นี่คือเครื่องมือ optimize **แบบจำลองจาก repo อ้างอิง** ไม่ใช่การยืนยันอัตราสำเร็จจริงของทุกเซิร์ฟเวอร์ สูตรต้นฉบับมี `todo: enhance this formula` และตรึงค่าทักษะ/Job ไว้ ส่วนความต่างของไอเท็ม อุปกรณ์ และเซิร์ฟเวอร์ไม่ได้ถูกจำลอง หากเพิ่มโบนัสเอง ผลลัพธ์อาจเกิน100%; ตัวเลขแสดงค่าจากสูตรดิบ ส่วนแถบภาพจำกัด0–100
+ตรวจเอกสารวันที่ **2026-09-30** เป็นสูตรที่ชุมชนเผยแพร่ ไม่ใช่การทดสอบเซิร์ฟเวอร์หรือสูตรทางการจาก Gravity
 
-| กิจกรรม | สูตรอัตราสำเร็จ (%) | Integer objective |
+| กิจกรรม / สกิล | สูตรดิบ (%) | สถานะ |
 |---|---|---|
-| Rune | 71 + DEX/30 + LUK/10 + 14/10 + 2 − 5 | DEX + 3 LUK |
-| Poison | 20 + 0.4 DEX + 0.2 LUK | 2 DEX + LUK |
-| Potion | 40 + 70×0.2 + 0.1 DEX + 0.1 LUK + 0.05 INT | 2 DEX + 2 LUK + INT |
+| Rune Mastery | 30 + 2×Skill + DEX/30 + LUK/10 + Job/10 + Stone − Rank | ปรับตามสูตรหลังแพตช์2022-10-13ที่ Wiki ระบุ |
+| Create Deadly Poison | 20 + 0.4×DEX + 0.2×LUK | ตรงกับสูตรต้นทาง |
+| Prepare Potion | 3×Prepare Potion + Potion Research + Instruction Change + Job/5 + DEX/10 + LUK/10 + INT/20 + Potion_Rate | **Wiki ระบุว่าสูตรยังมีข้อโต้แย้ง**; บางชนิดระบุ Potion_Rate เป็นช่วง |
+
+- **Rune:** เลือก Rune Mastery, Job Level, Rune Stone และสูตรRuneจริง ระบบใช้Rankและตรวจขั้นต่ำสกิลตามสูตรที่เลือก
+- **Poison:** คำนวณ Poison Bottle จาก **Create Deadly Poison** ไม่ใช่ New Poison Creation ของ Guillotine Cross
+- **Potion:** คำนวณ **Prepare Potion** ที่สืบทอดจากAlchemist ไม่ใช่ Special Pharmacy ของGenetic เลือกสกิล, Job, Instruction Change (0หากไม่ใช้) และชนิดยา
+- DEX/LUK/INT ในสูตรใช้ Base Stat + โบนัสรวมจาก Job/อุปกรณ์/บัฟที่กรอก
+- ช่วงPotionแสดงค่าต่ำ–สูงตามเอกสาร **ไม่เฉลี่ยกลาง ไม่สุ่ม และไม่อ้างว่าเป็นช่วงความเชื่อมั่น**
+- หน้าสูตรไม่ได้ระบุกฎปัดเศษหรือเพดานโอกาสคราฟต์ที่ชัดเจน จึง optimize **ค่าดิบ** และไม่ถือว่า100%เป็นการรับประกันผล ตัวเลขอาจเกิน100%; แถบภาพจำกัด0–100เพื่อแสดงผลเท่านั้น
+- ตัว optimizer ให้คำตอบดีที่สุดแน่นอนสำหรับสมการที่เลือก แต่ความแม่นยำของสมการในเกมขึ้นกับเอกสารและแพตช์ ไม่อาจยืนยันด้วยคณิตศาสตร์ของoptimizer
+
+เทียบหลายแหล่งแล้ว: iRO Wiki, โค้ดrAthenaที่pin commit, เอกสารทางการและรายงานผู้เล่น โดยแยกความน่าเชื่อถือและความขัดแย้ง ไม่ถือว่าemulatorเป็นหลักฐานตรงของiRO เช่น Lux Anima: Wikiหัก20 แต่rAthenaหัก15; แอปใช้Wiki20 ความต่างนี้เปลี่ยนอัตราดิบ5ppแต่ไม่เปลี่ยนชุดStatusที่ดีที่สุด เพราะเป็นค่าคงที่
+
+ดูรายละเอียดการเปรียบเทียบ,ลิงก์โค้ด,ตารางmodifierและข้อจำกัดที่ [SOURCE_NOTES.md](SOURCE_NOTES.md)
 
 ต้นทุนเพิ่ม Status จาก s → s+1:
 - s ≤99: floor((s−1)/10)+2
@@ -25,12 +37,14 @@
 
 งบเริ่มต้น48 (ปกติ) หรือ100 (Transcended) บวกแต้มจากการเพิ่มเลเวลตาม `gen_config.py` ของแหล่งอ้างอิง ค่า99/130เป็นเพดาน base stat; โบนัสแยกต่างหาก
 
-อ้างอิงที่ตรวจสอบ:
+อ้างอิงต้นทุน/งบ Status (ยังคงใช้snapshotต้นทาง ไม่ได้อ้างว่าเป็นตารางทุกคลาส/ทุกแพตช์ปัจจุบันของiRO):
 - [สูตร Rune/Poison/Potion Class3](https://github.com/econDS/RO-help-tool/blob/1cc20f489887228eec0ff5b91e4c5fe71c75961f/domain/class3.py)
 - [สูตร Assassin Cross](https://github.com/econDS/RO-help-tool/blob/1cc20f489887228eec0ff5b91e4c5fe71c75961f/domain/high_class.py)
 - [สูตร Alchemist](https://github.com/econDS/RO-help-tool/blob/1cc20f489887228eec0ff5b91e4c5fe71c75961f/domain/class2.py)
 - [การสร้างตารางแต้มและค่าอัป](https://github.com/econDS/RO-help-tool/blob/1cc20f489887228eec0ff5b91e4c5fe71c75961f/gen_config.py)
 - [การกำหนดเพดาน Status](https://github.com/econDS/RO-help-tool/blob/1cc20f489887228eec0ff5b91e4c5fe71c75961f/domain/player.py)
+
+แหล่งสูตรอัตราสำเร็จ: [Rune Mastery](https://irowiki.org/wiki/Rune_Mastery), [Create Deadly Poison](https://irowiki.org/wiki/Create_Deadly_Poison), [Potion Creation](https://irowiki.org/wiki/Potion_Creation), [Instruction Change](https://irowiki.org/wiki/Instruction_Change)
 
 เป็น implementation ใหม่จากสมการและข้อมูลแบบจำลอง ไม่ได้คัดลอก UI หรือ implementation ของ repo เดิม
 
@@ -69,4 +83,4 @@ Tests ใช้ exhaustive oracle **เฉพาะใน tests** เทีย�
 
 ทุก asset ใช้ relative URL จึงรองรับ project Pages ภายใต้ `/ro-best-status/` โดยไม่ต้องเปลี่ยน base path และไม่มี build step
 
-การตรวจ parity กับ source ณ commitข้างต้น: ต้นทุนครบ130ค่าและงบเลเวลครบ400ค่า (200เลเวล×2โหมด) ตรงกันทั้งหมด; อัตราสำเร็จของ18เคส (เลเวล99/150/200 × normal/transcended ×3กิจกรรม) ตรงกับ Python DP ต้นฉบับด้วย tolerance1e−9 สัดส่วน Status อาจต่างกันในคำตอบที่คะแนนเท่ากัน เพราะแอปนี้เลือกใช้แต้มน้อยที่สุดเป็นเกณฑ์รอง
+การตรวจ parity: ต้นทุนครบ130ค่าและงบเลเวลครบ400ค่า (200เลเวล×2โหมด) ตรงกับsnapshot RO-help-tool สูตรRune/PotionถูกปรับแยกตามiRO Wikiแล้ว จึงไม่คาดหวังอัตราสำเร็จเท่ากับค่าคงที่เดิม ตัวคูณStatusไม่เปลี่ยนจึงยังใช้score-indexed DPเดิมได้ และrecipeช่วงต่ำ/สูงให้ชุดStatusเหมาะที่สุดชุดเดียวกัน

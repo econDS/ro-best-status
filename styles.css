@@ -1738,3 +1738,187 @@ dl {
     margin-top:15px
   }
 }
+
+/* Formula controls and source-aware raw-rate ranges. */
+.formula-details>summary {
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:8px;
+  list-style:none;
+  font-size:12px;
+  font-weight:550;
+  color:#c3d3d7
+}
+.formula-details>summary::-webkit-details-marker {
+  display:none
+}
+.formula-details>summary>span {
+  color:#7c9ba5;
+  font:16px/1 ui-sans-serif,system-ui,sans-serif
+}
+.formula-details[open]>summary {
+  color:var(--mint)
+}
+.formula-group {
+  min-width:0;
+  border:0;
+  border-top:1px solid #2b3b46;
+  margin:18px 0 0;
+  padding:13px 0 0
+}
+.formula-group legend {
+  padding:0 7px 0 0;
+  color:#c3d3d7;
+  font-size:11px
+}
+.formula-group legend>span {
+  display:block;
+  font-size:9px;
+  font-weight:400;
+  color:#8ca4af
+}
+.formula-grid {
+  display:grid;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:12px;
+  margin:12px 0
+}
+.formula-grid label {
+  font-size:10px
+}
+.formula-scope {
+  border-top:1px solid #2b3b46;
+  padding-top:12px;
+  margin-top:16px
+}
+.formula-scope a {
+  color:var(--mint)
+}
+.activity-skill {
+  display:block;
+  margin-top:3px;
+  color:#a8bcc5;
+  font-size:9px;
+  line-height:1.4;
+  letter-spacing:0
+}
+.big-rate.is-range {
+  display:flex;
+  flex-wrap:wrap;
+  align-items:baseline;
+  gap:0 3px;
+  font-size:clamp(22px,1.8vw,27px);
+  letter-spacing:-1px
+}
+.big-rate.is-range>span {
+  white-space:nowrap
+}
+.big-rate.is-range small {
+  font-size:14px
+}
+.range-dash {
+  font-size:.8em;
+  margin-left:2px
+}
+.comparison-label {
+  gap:5px
+}
+.current-rate {
+  text-align:right
+}
+.raw-label {
+  min-height:26px
+}
+.formula-reference+.formula-reference {
+  border-top:1px solid #263b47;
+  padding-top:16px;
+  margin-top:16px
+}
+.formula-reference h3 {
+  color:#bfd1d9;
+  font-size:12px;
+  font-weight:550;
+  line-height:1.7;
+  margin-bottom:7px
+}
+.formula-expression {
+  color:#b9cec8;
+  font-family:ui-monospace,monospace;
+  line-height:1.8;
+  overflow-wrap:anywhere
+}
+.source-caution {
+  display:inline-block;
+  border:1px solid #675744;
+  background:#302a25;
+  color:#ddbd98;
+  border-radius:4px;
+  margin-left:5px;
+  padding:1px 6px;
+  font-size:9px;
+  font-weight:400
+}
+@media(max-width:1000px) {
+  .big-rate.is-range {
+    font-size:25px
+  }
+  .activity-skill {
+    margin-left:41px;
+    font-size:8px
+  }
+}
+@media(max-width:720px) {
+  .formula-details>summary {
+    font-size:13px
+  }
+  .formula-group legend {
+    font-size:12px
+  }
+  .formula-grid label {
+    font-size:11px
+  }
+  .formula-group legend>span,.formula-details .field-hint {
+    font-size:10px
+  }
+  .activity-skill {
+    margin-left:43px
+  }
+  .big-rate.is-range {
+    font-size:25px;
+    letter-spacing:-.7px
+  }
+}
+@media(max-width:380px) {
+  .big-rate.is-range {
+    font-size:23px
+  }
+  .activity-skill {
+    margin-left:0;
+    clear:both;
+    padding-top:4px
+  }
+}
+.comparison-label {
+  flex-wrap:wrap
+}
+.current-rate {
+  max-width:100%;
+  margin-left:auto;
+  overflow-wrap:anywhere
+}
+.rate-body {
+  min-width:0
+}
+
+.source-conflict {
+  color:#d4b899;
+  border-left:2px solid #8f7657;
+  padding-left:8px;
+  margin-top:10px
+}
+.source-conflict a {
+  color:#ead0ad;
+  text-decoration:underline;
+  text-underline-offset:2px
+}

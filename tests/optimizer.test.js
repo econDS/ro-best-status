@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {STATS,ACTIVITIES,totalPoints,upgradeCost,costOf,successRate,optimize} from '../optimizer.js';
+import {STATS,ACTIVITIES,totalPoints,upgradeCost,costOf,successRate,successRange,FORMULA_DEFAULTS,POTION_RECIPES,RUNE_RECIPES,optimize} from '../optimizer.js';
 const ones=()=>Object.fromEntries(STATS.map(s=>[s,1]));
 test('source-table boundaries and budgets',()=>{
   for(const [stat,cost] of [[1,2],[10,2],[11,3],[90,10],[91,11],[99,11],[100,16],[104,16],[105,20],[129,36]]) assert.equal(upgradeCost(stat),cost);
@@ -10,9 +10,10 @@ test('source-table boundaries and budgets',()=>{
   assert.equal(costOf({...ones(),DEX:99}),628);
 });
 test('source formulas and constant stat bonuses',()=>{
-  assert.equal(successRate('potion',ones()),54.25);
+  assert.equal(successRate('potion',ones()),65.25);
+  assert.deepEqual(successRange('potion',ones()),{min:65.25,max:75.25});
   assert.equal(successRate('poison',ones()),20.6);
-  assert.ok(Math.abs(successRate('rune',ones())-69.53333333333333)<1e-12);
+  assert.ok(Math.abs(successRate('rune',ones())-56.13333333333333)<1e-12);
   const a=optimize({activity:'poison',budget:500});
   const b=optimize({activity:'poison',budget:500,bonuses:{DEX:20,LUK:10}});
   assert.deepEqual(a.stats,b.stats); assert.ok(Math.abs(b.rate-a.rate-10)<1e-12);
@@ -59,4 +60,40 @@ test('no budget, saturated budgets, invalid inputs, deterministic ties',()=>{
   assert.throws(()=>optimize({activity:'potion',budget:1,base:{...ones(),STR:2}}));
   assert.throws(()=>optimize({activity:'poison',budget:10,bonuses:{DEX:NaN}}));
   assert.throws(()=>totalPoints(201)); assert.throws(()=>totalPoints(0));
+});
+
+
+test('iRO Wiki Rune skill/job/stone/recipe terms and recipe requirements',()=>{
+  const stats={...ones(),DEX:90,LUK:100};
+  const formula={runeSkill:10,runeJob:70,runeStone:30,runeRecipe:'verkana'};
+  assert.equal(successRate('rune',stats,{},formula),80);
+  assert.equal(successRate('rune',stats,{}, {...formula,runeStone:60}),110); // No undocumented clamp.
+  for(const recipe of RUNE_RECIPES){
+    const f={...formula,runeRecipe:recipe.id,runeSkill:recipe.minSkill};
+    assert.equal(successRate('rune',stats,{},f),30+2*recipe.minSkill+13+7+30-recipe.penalty);
+    if(recipe.minSkill>1)assert.throws(()=>successRate('rune',stats,{}, {...f,runeSkill:recipe.minSkill-1}));
+  }
+  assert.throws(()=>successRate('rune',stats,{}, {...formula,runeStone:10}));
+  assert.throws(()=>successRate('rune',stats,{}, {...formula,runeRecipe:'unknown'}));
+});
+test('iRO Wiki potion ranges are preserved without midpoint or random interpretation',()=>{
+  const stats={...ones(),DEX:90,LUK:100,INT:50};
+  const formula={potionPharmacy:10,potionLearning:10,potionInstruction:5,potionJob:70};
+  const constant=30+10+5+14+9+10+2.5;
+  for(const recipe of POTION_RECIPES){
+    assert.deepEqual(successRange('potion',stats,{}, {...formula,potionRecipe:recipe.id}),{min:constant+recipe.min,max:constant+recipe.max});
+  }
+  assert.deepEqual(successRange('potion',stats,{}, {...formula,potionRecipe:'red'}),{min:95.5,max:105.5});
+  assert.throws(()=>successRate('potion',stats,{}, {...formula,potionPharmacy:0}));
+  assert.throws(()=>successRate('potion',stats,{}, {...formula,potionLearning:4}));
+  assert.throws(()=>successRate('potion',stats,{}, {...formula,potionInstruction:6}));
+  assert.throws(()=>successRate('potion',stats,{}, {...formula,potionRecipe:'unknown'}));
+});
+test('fixed formula terms change rates but not exact raw-optimum allocation',()=>{
+  for(const activity of ['rune','potion']){
+    const a=optimize({activity,budget:1273,cap:130});
+    const b=optimize({activity,budget:1273,cap:130,formula:{...FORMULA_DEFAULTS,runeStone:60,potionRecipe:'condensed-white',potionJob:70}});
+    assert.deepEqual(a.stats,b.stats);assert.equal(a.spent,b.spent);assert.equal(a.score,b.score);
+    assert.ok(a.rate!==b.rate);
+  }
 });

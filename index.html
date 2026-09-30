@@ -17,7 +17,7 @@
       <svg class="brand-mark" viewBox="0 0 40 40" aria-hidden="true"><path d="M20 3 35 20 20 37 5 20Z"/><path d="M20 12v16M13 20h14"/></svg>
       <span>STAT<span class="brand-thin">FORGE</span><small>RAGNAROK ONLINE · STAT PLANNER</small></span>
     </a>
-    <nav aria-label="เมนูหลัก"><a href="#method">วิธีคำนวณ <span aria-hidden="true">↗</span></a><a class="source-link" href="https://github.com/econDS/RO-help-tool/tree/1cc20f489887228eec0ff5b91e4c5fe71c75961f" target="_blank" rel="noopener noreferrer">ดูสูตรต้นทาง <span aria-hidden="true">↗</span></a></nav>
+    <nav aria-label="เมนูหลัก"><a href="#method">วิธีคำนวณ <span aria-hidden="true">↗</span></a><a class="source-link" href="https://github.com/econDS/RO-help-tool/tree/1cc20f489887228eec0ff5b91e4c5fe71c75961f" target="_blank" rel="noopener noreferrer">แหล่งข้อมูลแต้ม <span aria-hidden="true">↗</span></a></nav>
   </header>
 
   <main class="shell">
@@ -47,7 +47,7 @@
       </div>
     </section>
 
-    <div class="notice" role="note"><span class="notice-icon" aria-hidden="true">i</span><p>ใช้เพื่อวางแผนจากสูตรจำลอง <strong>ไม่ใช่อัตราสำเร็จทางการของเกม</strong> สูตรต้นทางยังมี TODO และอาจต่างจากเซิร์ฟเวอร์ที่คุณเล่น</p><a href="#method">อ่านเงื่อนไข <span aria-hidden="true">↓</span></a></div>
+    <div class="notice" role="note"><span class="notice-icon" aria-hidden="true">i</span><p>สูตรสร้างรูนและพิษอ้างอิง iRO Wiki · <strong>สูตรปรุงยายังมีข้อโต้แย้งในแหล่งข้อมูล</strong> ผลเป็นค่าดิบสำหรับวางแผน ไม่ใช่อัตราสำเร็จที่ยืนยันจากเซิร์ฟเวอร์</p><a href="#method">อ่านเงื่อนไข <span aria-hidden="true">↓</span></a></div>
 
     <section class="planner" id="planner" aria-label="เครื่องคำนวณสเตตัส">
       <aside class="character-panel">
@@ -65,6 +65,27 @@
           <div class="form-section stats-section"><div class="field-heading"><h3>สเตตัสปัจจุบัน</h3><button type="button" id="clear-stats" class="text-button">ตั้งทั้งหมดเป็น 1</button></div><p class="field-hint">เฉพาะ Base Stat ไม่รวมอุปกรณ์และบัฟ</p><div id="base-stats" class="stats-input-grid"></div>
             <details class="bonus-details"><summary>โบนัสจากอุปกรณ์ / บัฟ <span aria-hidden="true">+</span></summary><p class="field-hint">บวกในสูตรอัตราสำเร็จ ไม่ใช้แต้มและไม่จำกัดด้วยเพดาน Base Stat</p><div id="bonus-stats" class="stats-input-grid"></div></details>
           </div>
+          <div class="form-section formula-section">
+            <details class="formula-details" id="formula-details">
+              <summary>ตั้งค่าสูตร iRO Wiki <span aria-hidden="true">+</span></summary>
+              <p class="field-hint">สกิล, Job Level และไอเท็มเปลี่ยนค่าจากสูตร แต่ไม่ใช้แต้มสเตตัส</p>
+              <fieldset class="formula-group">
+                <legend>สร้างรูน <span>Rune Mastery</span></legend>
+                <label for="rune-recipe">รูนที่ต้องการสร้าง<select id="rune-recipe" name="runeRecipe" aria-describedby="rune-recipe-hint"></select></label>
+                <p class="field-hint" id="rune-recipe-hint"></p><p class="field-hint source-conflict" id="rune-source-conflict" hidden>Lux Anima: iRO Wiki จัดเป็น Rank S (−20 pp) แต่ <a href="https://github.com/rathena/rathena/blob/e985006171d2eb320ee512a653f4c83aea3d81b6/src/map/skill.cpp#L13014-L13053" target="_blank" rel="noopener noreferrer">rAthena ที่ตรวจเทียบ ↗</a> ใช้ −15 pp · หน้านี้ใช้ค่า iRO Wiki</p>
+                <div class="formula-grid"><label for="rune-skill">Rune Mastery<input id="rune-skill" name="runeSkill" type="number" inputmode="numeric" min="1" max="10" step="1" value="10" aria-describedby="rune-recipe-hint"></label><label for="rune-job">Job Level<input id="rune-job" name="runeJob" type="number" inputmode="numeric" min="1" max="70" step="1" value="70"></label></div>
+                <label for="rune-stone">หินที่ใช้สร้าง<select id="rune-stone" name="runeStone"><option value="4">General · +4 pp</option><option value="8">Quality · +8 pp</option><option value="15">Rare · +15 pp</option><option value="30">Ancient · +30 pp</option><option value="60">Mystic · +60 pp</option></select></label>
+              </fieldset>
+              <fieldset class="formula-group">
+                <legend>ปรุงยา <span>ช่วงค่าจากสูตรที่มีข้อโต้แย้ง</span></legend>
+                <label for="potion-recipe">ไอเท็มที่ต้องการปรุง<select id="potion-recipe" name="potionRecipe" aria-describedby="potion-recipe-hint"></select></label>
+                <p class="field-hint" id="potion-recipe-hint"></p>
+                <div class="formula-grid"><label for="potion-pharmacy">Prepare Potion<input id="potion-pharmacy" name="potionPharmacy" type="number" inputmode="numeric" min="1" max="10" step="1" value="10"></label><label for="potion-learning">Potion Research<input id="potion-learning" name="potionLearning" type="number" inputmode="numeric" min="5" max="10" step="1" value="10"></label><label for="potion-instruction">Instruction Change<input id="potion-instruction" name="potionInstruction" type="number" inputmode="numeric" min="0" max="5" step="1" value="0"></label><label for="potion-job">Job Level<input id="potion-job" name="potionJob" type="number" inputmode="numeric" min="1" max="70" step="1" value="50"></label></div>
+                <p class="field-hint">Prepare Potion ต้องมี Potion Research ≥ 5 · แสดงช่วง Potion_Rate ตามไอเท็มที่เลือกโดยไม่ใช้ค่ากลาง</p>
+              </fieldset>
+              <p class="field-hint formula-scope">สูตรพิษใช้ DEX และ LUK เท่านั้น · ดูแหล่งอ้างอิงและขอบเขตที่ <a href="#method">สูตรและข้อจำกัด ↓</a></p>
+            </details>
+          </div>
           <div class="form-section strategy-section"><h3 id="mode-label">วางแผนแบบไหน?</h3><div class="segmented-control" role="radiogroup" aria-labelledby="mode-label"><label><input type="radio" name="mode" value="current" checked><span>ต่อจากค่าปัจจุบัน</span></label><label><input type="radio" name="mode" value="reset"><span>รีเซ็ตแล้วจัดใหม่</span></label></div><p id="mode-hint" class="field-hint">รักษาทุกค่าที่อัปแล้ว และจัดสรรแต้มที่เหลือ</p><div id="form-error" class="form-error" role="alert" hidden></div><button class="calculate-button" id="calculate" type="submit"><span>หาสเตตัสที่ดีที่สุด</span><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M4 10h12M11 5l5 5-5 5"/></svg></button><p class="privacy-note">คำนวณบนเครื่องคุณ · ไม่มีการส่งข้อมูลตัวละคร</p></div>
         </form>
       </aside>
@@ -73,8 +94,8 @@
         <div class="results-heading"><div><div class="eyebrow muted">YOUR NEXT BEST BUILD</div><h2>เปรียบเทียบสายคราฟต์</h2></div><span class="result-status" id="result-status" role="status" aria-live="polite" aria-atomic="true"><i aria-hidden="true"></i> กำลังคำนวณ</span></div>
         <p class="results-caption">แต่ละการ์ดคือการจัดสรรแต้มทั้งชุดสำหรับกิจกรรมนั้น เลือกใช้ทีละชุด</p>
         <div id="result-cards" class="result-cards"></div>
-        <div class="results-bottom"><span id="calculation-info">กำลังเตรียมตัวค้นหา…</span><span>ผลลัพธ์จากสูตรดิบ อาจเกิน 100%</span></div>
-        <div class="insight-box"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m12 3 8 9-8 9-8-9Z"/><path d="M12 7v10M8 12h8"/></svg><div><h3>แต้มเหลือ อาจเป็นคำตอบที่ดีที่สุด</h3><p>เมื่อได้คะแนนเท่ากัน ระบบเลือกชุดที่ใช้แต้มน้อยที่สุด จึงเก็บแต้มส่วนที่เพิ่มอัตราสำเร็จไม่ได้ไว้ให้คุณ</p></div></div>
+        <div class="results-bottom"><span id="calculation-info">กำลังเตรียมตัวค้นหา…</span><span>ผลจากสูตรดิบ · ยังไม่ปรับเพดานหรือปัดเศษของเซิร์ฟเวอร์</span></div>
+        <div class="insight-box"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m12 3 8 9-8 9-8-9Z"/><path d="M12 7v10M8 12h8"/></svg><div><h3>แต้มเหลือ อาจเป็นคำตอบที่ดีที่สุด</h3><p>เมื่อได้ค่าจากสูตรดิบเท่ากัน ระบบเลือกชุดที่ใช้แต้มน้อยที่สุด ช่วงค่าของสูตรปรุงยาใช้ชุดสเตตัสแนะนำเดียวกันทั้งสองปลายช่วง</p></div></div>
       </div>
     </section>
 
@@ -84,7 +105,12 @@
       <div class="method-step"><span class="method-number">02 /</span><h3>หาค่าสูงสุดอย่างแม่นยำ</h3><p>เก็บต้นทุนต่ำสุดของแต่ละคะแนน แล้วเลือกคะแนนสูงสุดที่อยู่ในงบ แทนการไล่ทุกชุดสเตตัส</p></div>
       <div class="method-step"><span class="method-number">03 /</span><h3>เลือกอย่างสม่ำเสมอ</h3><p>ถ้าคะแนนเท่ากัน เลือกชุดที่ใช้แต้มน้อยกว่า แล้วใช้ลำดับการจัดสรรคงที่เพื่อให้ได้คำตอบเดิม</p></div>
     </section>
-    <details class="assumptions"><summary>สูตรที่ใช้และข้อจำกัด <span aria-hidden="true">+</span></summary><div><p>ปรุงยา: 54 + DEX × 0.1 + LUK × 0.1 + INT × 0.05</p><p>สร้างพิษ: 20 + DEX × 0.4 + LUK × 0.2</p><p>สร้างรูน: 69.4 + DEX ÷ 30 + LUK × 0.1</p><p>ใช้ Base Stat + โบนัสในแต่ละสูตร ค่าคงที่มาจากโค้ดต้นทาง ไม่ได้คำนวณ Job Level, ชนิดไอเท็ม หรือเงื่อนไขเซิร์ฟเวอร์เพิ่มเติม ตัวเลข % คือผลลัพธ์ดิบของสูตรและอาจมากกว่า 100% ส่วนแถบภาพจำกัดไว้ที่ 0–100% เพื่อการแสดงผลเท่านั้น</p><p>Class 2 รองรับเลเวล 1–99 และ Class 3 รองรับเลเวล 99–200 ตามโปรไฟล์ต้นทาง สร้างรูนใช้กับ Class 3 เท่านั้น ส่วนสร้างพิษใน Class 2 อ้างอิง Assassin Cross ซึ่งต้องผ่านการจุติ และ Alchemist อ้างอิงตัวละครไม่จุติ ชุดคำตอบอาจมีหลายแบบที่ได้คะแนนสูงสุดเท่ากัน</p><p>อ้างอิง <a href="https://github.com/econDS/RO-help-tool/tree/1cc20f489887228eec0ff5b91e4c5fe71c75961f" target="_blank" rel="noopener noreferrer">RO-help-tool · commit 1cc20f4 ↗</a> เป็นเครื่องมือจำลองอิสระ ไม่ได้เกี่ยวข้องกับผู้ให้บริการเกม</p></div></details>
+    <details class="assumptions"><summary>สูตรที่ใช้ แหล่งอ้างอิง และข้อจำกัด <span aria-hidden="true">+</span></summary><div>
+      <section class="formula-reference"><h3>สร้างรูน · Rune Mastery</h3><p class="formula-expression">30 + 2 × Rune Mastery + DEX ÷ 30 + LUK ÷ 10 + Job Level ÷ 10 + Stone Bonus − Rune Difficulty</p><p>เลือกชนิดรูนและหินได้ในการตั้งค่าสูตร โดยระบบใช้ระดับสกิลขั้นต่ำและค่าความยากของรูนแต่ละชนิด ค่าเพิ่มของหิน General / Quality / Rare / Ancient / Mystic เท่ากับ 4 / 8 / 15 / 30 / 60 จุดเปอร์เซ็นต์</p><p>Lux Anima ใช้ Rank S (−20 pp) ตาม iRO Wiki ซึ่งต่างจาก rAthena (−15 pp) · อ้างอิง <a href="https://irowiki.org/wiki/Rune_Mastery" target="_blank" rel="noopener noreferrer">iRO Wiki · Rune Mastery ↗</a> และ <a href="https://irowiki.org/wiki/Rune_Mastery#Rune_Materials" target="_blank" rel="noopener noreferrer">Rune Materials ↗</a></p></section>
+      <section class="formula-reference"><h3>สร้างขวดพิษ · Create Deadly Poison</h3><p class="formula-expression">20 + DEX × 0.4 + LUK × 0.2</p><p>สูตรนี้ใช้สร้าง Poison Bottle ด้วย Create Deadly Poison ไม่ใช่ New Poison Creation ของ Guillotine Cross</p><p>อ้างอิง <a href="https://irowiki.org/wiki/Create_Deadly_Poison" target="_blank" rel="noopener noreferrer">iRO Wiki · Create Deadly Poison ↗</a></p></section>
+      <section class="formula-reference"><h3>ปรุงยา · Prepare Potion <span class="source-caution">สูตรมีข้อโต้แย้ง</span></h3><p class="formula-expression">3 × Prepare Potion + Potion Research + Instruction Change + Job Level × 0.2 + DEX × 0.1 + LUK × 0.1 + INT × 0.05 + Potion_Rate</p><p>iRO Wiki ระบุชัดว่าสูตรนี้ยังมีข้อโต้แย้ง จึงแสดงเป็นแบบจำลองชุมชนที่ยังไม่ยืนยัน เลือกไอเท็มเพื่อใช้ค่า Potion_Rate ตามตาราง เมื่อแหล่งข้อมูลระบุเป็นช่วง หน้าคำนวณจะแสดงทั้งปลายต่ำและปลายสูงโดยไม่ใช้ค่ากลาง ช่วงนี้ไม่ใช่ช่วงความเชื่อมั่นทางสถิติหรือการรับประกันผล</p><p>ครอบคลุม Prepare Potion ที่สืบทอดจาก Alchemist ไม่ใช่ Special Pharmacy ของ Genetic · อ้างอิง <a href="https://irowiki.org/wiki/Potion_Creation#Formula" target="_blank" rel="noopener noreferrer">iRO Wiki · Potion Creation: Formula ↗</a></p></section>
+      <section class="formula-reference"><h3>ขอบเขตของตัวค้นหาและข้อมูลแต้ม</h3><p>ตรวจเทียบเอกสาร iRO Wiki กับ <a href="https://github.com/rathena/rathena/blob/e985006171d2eb320ee512a653f4c83aea3d81b6/src/map/skill.cpp#L13014-L13053" target="_blank" rel="noopener noreferrer">โค้ด rAthena · commit e985006 ↗</a> แล้ว แต่ emulator ไม่ใช่การยืนยันพฤติกรรมของเซิร์ฟเวอร์ iRO หน้านี้เลือกใช้แบบจำลอง iRO Wiki อย่างสม่ำเสมอ ดู <a href="https://github.com/econDS/ro-best-status/blob/main/SOURCE_NOTES.md" target="_blank" rel="noopener noreferrer">ผลตรวจเทียบหลายแหล่งและข้อจำกัด ↗</a></p><p>ใช้ Base Stat + โบนัสในสูตร และหาค่าสูตรดิบสูงสุดในงบ ไม่ได้อ้างว่าเป็นอัตราสำเร็จจริงที่ตรวจยืนยันกับเซิร์ฟเวอร์ ไม่มีการเติมเพดานสำเร็จหรือกฎปัดเศษที่แหล่งอ้างอิงไม่ได้ระบุ ตัวเลขจึงอาจต่ำกว่า 0% หรือสูงกว่า 100% ส่วนแถบภาพจำกัดไว้ที่ 0–100% เพื่อการแสดงผลเท่านั้น</p><p>เมื่อค่าจากสูตรดิบเท่ากัน ระบบเลือกชุดที่ใช้แต้มน้อยกว่า ทั้งสองปลายช่วงปรุงยาใช้สเตตัสแนะนำชุดเดียวกัน เพราะ Potion_Rate ไม่เปลี่ยนน้ำหนักของสเตตัส</p><p>ตารางต้นทุนและงบสเตตัสยังอ้างอิง <a href="https://github.com/econDS/RO-help-tool/tree/1cc20f489887228eec0ff5b91e4c5fe71c75961f" target="_blank" rel="noopener noreferrer">RO-help-tool · commit 1cc20f4 ↗</a> แยกจากสูตรสำเร็จของ iRO Wiki โปรไฟล์ Class 2 รองรับเลเวล 1–99 และเพดาน 99 ส่วน Class 3 รองรับเลเวล 99–200 และเพดาน 130 ตามต้นทาง ไม่ใช่การรับรองเพดานของ iRO เวอร์ชันปัจจุบัน</p><p>ในโปรไฟล์นี้ สร้างรูนใช้ Class 3, Create Deadly Poison ใน Class 2 ใช้ Assassin Cross ที่จุติแล้ว และ Prepare Potion ใน Class 2 ใช้ Alchemist ที่ไม่จุติ สูตรและข้อกำหนดอาจต่างกันระหว่างเซิร์ฟเวอร์หรือแพตช์ เครื่องมือนี้เป็นอิสระและไม่เกี่ยวข้องกับผู้ให้บริการเกม</p></section>
+    </div></details>
   </main>
   <footer class="site-footer shell"><span>STATFORGE <span class="footer-separator">/</span> A LITTLE MATH. A BETTER BUILD.</span><span>สร้างเพื่อชาว Midgard <span class="footer-sparkle" aria-hidden="true">✧</span></span></footer>
   <noscript><div class="noscript">เครื่องคำนวณนี้ต้องใช้ JavaScript กรุณาเปิดใช้งานในเบราว์เซอร์</div></noscript>
