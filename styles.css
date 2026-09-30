@@ -1922,3 +1922,138 @@ dl {
   text-decoration:underline;
   text-underline-offset:2px
 }
+
+/* Independent class profiles, automatic Job Bonuses, and safe saved-data migration. */
+.migration-notice {
+  display:flex;
+  align-items:center;
+  gap:20px;
+  margin-top:18px;
+  padding:17px 20px;
+  border:1px solid #8d714b;
+  border-radius:9px;
+  background:#352e23;
+  color:#e7ceb0;
+  font-size:12px
+}
+.migration-notice strong { display:block; margin-bottom:4px; color:#f5e2c7 }
+.migration-notice p { font-size:11px; line-height:1.85 }
+.migration-notice button {
+  flex-shrink:0;
+  border:1px solid #ad8d62;
+  background:#58442d;
+  color:#ffe9ca;
+  border-radius:6px;
+  padding:8px 16px;
+  font-size:11px
+}
+.migration-old-values { margin-top:7px; color:#bda789 }
+.rebirth-hint { margin-bottom:14px }
+.profiles-section { margin:0 0 20px }
+.profiles-heading {
+  display:flex;
+  flex-wrap:wrap;
+  justify-content:space-between;
+  align-items:center;
+  gap:8px;
+  margin-bottom:10px
+}
+.profiles-heading h3 { font-size:12px; font-weight:550; color:#c2d3d9 }
+.profiles-heading>span { color:#8aaca5; font-size:10px }
+.profile-controls { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:13px }
+.profile-control {
+  min-width:0;
+  margin:0;
+  padding:11px 12px 12px;
+  background:#14212d;
+  border:1px solid #33434e;
+  border-radius:9px
+}
+.profile-control legend { padding:0 5px; font-size:11px; color:var(--mint) }
+.profile-control.rune legend { color:var(--purple) }
+.profile-control.poison legend { color:var(--coral) }
+.profile-fields { display:grid; grid-template-columns:minmax(0,1fr) 64px; gap:8px }
+.profile-fields label { font-size:9px }
+.profile-fields select,.profile-fields input { height:35px; margin-top:4px; padding:6px 7px; font-size:11px }
+.profile-fields input { text-align:center }
+.profile-hint { margin-top:8px; color:#88a0ad; font-size:8px; line-height:1.7 }
+.profile-change { margin-top:7px; color:#e4bb91; font-size:9px; line-height:1.75 }
+.profile-source { font-size:9px; margin-top:5px; color:#8ea6b0 }
+.profile-source summary { width:fit-content; color:#8eb5ad }
+.profile-source p { margin-top:7px; font-size:9px; line-height:1.85; overflow-wrap:anywhere }
+.profile-source a { color:var(--mint); text-decoration:underline; text-underline-offset:2px }
+.profile-context {
+  display:flex;
+  flex-wrap:wrap;
+  gap:2px 9px;
+  margin-top:12px;
+  padding-top:10px;
+  border-top:1px solid #2a3b46;
+  font-size:9px;
+  line-height:1.75;
+  color:#819daa;
+  clear:both
+}
+.profile-context strong { color:#c5d5d9; font-weight:500 }
+.profile-context small { width:100%; font-size:8px; color:#76958e }
+.bonus-breakdown { margin-top:18px; padding-top:11px; border-top:1px solid #2a3d48; min-width:0 }
+.bonus-breakdown>p { font-size:8px; color:#97b1bb; line-height:1.7 }
+.bonus-breakdown table { width:100%; border-collapse:collapse; font:9px/1.8 ui-sans-serif,system-ui,sans-serif; font-variant-numeric:tabular-nums; margin-top:7px }
+.bonus-breakdown th,.bonus-breakdown td { padding:3px 1px; text-align:right; border-bottom:1px solid #22343e; font-weight:400; color:#8198a3 }
+.bonus-breakdown thead th { font-size:8px; color:#6f8d9c; line-height:1.5 }
+.bonus-breakdown th:first-child { text-align:left }
+.bonus-breakdown tr.relevant th,.bonus-breakdown tr.relevant td { color:#c3d4d7 }
+.bonus-breakdown tr.relevant td:last-child { color:var(--accent); font-weight:600 }
+.bonus-breakdown>span { display:block; margin-top:7px; font-size:8px; color:#77958d }
+.bonus-source-note { margin-top:9px; padding:8px 9px; border:1px solid #29473f; border-radius:5px; background:#1c312b66; color:#8dac9f; font-size:8px; line-height:1.8 }
+.bonus-source-note.is-caution { border-color:#755b3c; background:#382d2266; color:#d1b28f }
+.bonus-source-note a { text-decoration:underline; text-underline-offset:2px }
+.locked .card-head { opacity:1 }
+.locked-body .card-error { color:#e0bba7 }
+select[aria-invalid=true] { border-color:#eaae9b }
+@media(max-width:1199px) and (min-width:1001px) {
+  .profile-fields { grid-template-columns:minmax(0,1fr) 53px; gap:5px }
+  .profile-control { padding:9px 9px 11px }
+  .profile-fields select,.profile-fields input { font-size:10px; padding:6px 4px }
+}
+@media(max-width:1000px) {
+  .profile-controls { grid-template-columns:1fr; gap:10px }
+  .profile-control { display:grid; grid-template-columns:minmax(0,1fr) minmax(105px,.7fr); gap:0 14px; padding:7px 13px 11px; align-items:center }
+  .profile-fields { grid-row:1 / span 3 }
+  .profile-hint { margin-top:0; font-size:8px }
+  .profile-source { margin-top:3px }
+  .profile-change { grid-column:1 / -1; grid-row:4 }
+  .profile-context { margin-top:10px }
+  .bonus-breakdown { margin-top:12px }
+  .bonus-breakdown table { font-size:10px }
+  .locked-body { display:block }
+  .locked-body .unlock-button { margin-top:13px }
+}
+@media(max-width:720px) {
+  .migration-notice { align-items:flex-start; flex-direction:column; gap:12px; padding:15px }
+  .profile-controls { gap:12px }
+  .profile-control { padding:9px 13px 13px; gap:0 14px }
+  .profile-control legend { font-size:12px }
+  .profile-fields label { font-size:10px }
+  .profile-fields select,.profile-fields input { height:38px; font-size:12px }
+  .profile-source,.profile-hint { font-size:9px }
+  .profile-context { font-size:9px; gap:2px 6px }
+  .bonus-breakdown>p { font-size:8px }
+  .bonus-source-note { font-size:9px }
+}
+@media(max-width:460px) {
+  .profile-control { display:block }
+  .profile-hint { margin-top:7px }
+  .profile-fields { grid-template-columns:minmax(0,1fr) 80px }
+  .profile-source { margin-top:4px }
+  .result-card:not(.locked) { display:block }
+  .allocation { border-left:0; border-top:1px solid #293943; padding:18px }
+  .card-head { padding:19px 18px 12px }
+  .rate-body { padding:0 18px 18px }
+  .allocation-grid { grid-template-columns:repeat(3,minmax(0,1fr)); gap:12px; margin-top:14px }
+  .bonus-breakdown table { font-size:12px }
+  .bonus-breakdown thead th { font-size:10px }
+  .bonus-breakdown>p,.bonus-breakdown>span { font-size:10px }
+  .profile-context { font-size:10px }
+  .profile-context small { font-size:9px }
+}

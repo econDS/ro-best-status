@@ -2,7 +2,7 @@
 
 ## Math and source checks (2026-09-30)
 
-- `npm test`: nine test groups passed
+- `npm test`: sixteen test groups passed
 - JS syntax and `git diff --check` passed
 - Exact score/minimum-cost results vs exhaustive **test-only** oracle for all budgets0–100, caps2/4/7/11, all three activities
 - Current minima, irrelevant-stat spending, zero/full budgets, deterministic ties, invalid inputs, bonuses and greedy counterexample
@@ -13,9 +13,20 @@
 - Verified fixed offsets/recipe endpoints change displayed output but not raw-optimal stat allocation
 - Source arithmetic, formula uncertainty and rAthena differences documented in SOURCE_NOTES.md
 
+## Job-bonus integration
+
+- Six classes, every Job1..max and each stat increment boundary tested
+- Exact max totals and documented supplemental Genetic/GX boundaries checked
+- Current-class-only lookup; class switches do not stack previous bonuses
+- Once-only Base+Job+equipment sum and separate direct JobLevel term tested numerically
+- Profile-specific rebirth budgets, caps and invalid classes/levels checked
+- Provenance caution appears only above confirmed Wiki ranges (or AssassinCrossJob1–2 AGI discrepancy)
+
 ## DOM smoke
 
-jsdom smoke passed defaults69.80/80.40/85.70–95.70,10 Rune/17 potion recipes, skill/material updates, minimumskills, blank/invalid input and stale-result clearing, raw>100, class/rebirth locks, zero/over budget, current/reset stats, positive/negative bonuses, repeated actions and persisted-formula sanitization. DOM tests do not substitute for visual rendering.
+Prior formula smoke covered10 Rune/17 potion recipes, skill/material updates, minimumskills, blank/invalid input, raw>100 and persisted-formula sanitization.
+
+Current job-profile DOM smoke passed defaults70.60/84.80/86.95–96.95, allclass selectors, independent class/job changes, visibleJob clamp, forced-rebirth budgets, card-local cap/level/job/formula errors, once-only gear+Job totals, provenance warnings, v2 persistence, Creator valid above genericnonrebirth budget, zero budget and v1 migration preservingbase/level/budget/formula/backup with persistent notice and acknowledgment. DOM tests do not substitute for visual rendering.
 
 ## Browser/deployment verification
 

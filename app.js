@@ -1,18 +1,18 @@
 import { STATS, ACTIVITIES, FORMULA_DEFAULTS, POTION_RECIPES, RUNE_RECIPES, totalPoints, costOf, successRange, optimize } from './optimizer.js';
+import { JOB_PROFILES, DEFAULT_PROFILES, resolveProfile, combineBonuses } from './job-profiles.js';
 
 const $ = (selector) => document.querySelector(selector);
-const STORAGE_KEY = 'statforge-planner-v1';
+const STORAGE_KEY = 'statforge-planner-v2';
+const LEGACY_STORAGE_KEY = 'statforge-planner-v1';
 const ALL_ONES = Object.fromEntries(STATS.map((stat) => [stat, 1]));
 const ALL_ZEROES = Object.fromEntries(STATS.map((stat) => [stat, 0]));
-const DEFAULTS = { level: 99, cap: 130, transcended: false, custom: false, budget: totalPoints(99, false), mode: 'current', base: ALL_ONES, bonuses: ALL_ZEROES, formula: FORMULA_DEFAULTS };
+const DEFAULTS = { schema: 2, level: 99, transcended: false, custom: false, budget: totalPoints(99, false), mode: 'current', base: ALL_ONES, bonuses: ALL_ZEROES, formula: FORMULA_DEFAULTS, profiles: DEFAULT_PROFILES, migrationPending: false };
 const names = { rune: 'สร้างรูน', poison: 'สร้างขวดพิษ', potion: 'ปรุงยา' };
 const FORMULA_FIELDS = {
   runeSkill: { selector: '#rune-skill', label: 'Rune Mastery', min: 1, max: 10 },
-  runeJob: { selector: '#rune-job', label: 'Job Level สำหรับรูน', min: 1, max: 70 },
   potionPharmacy: { selector: '#potion-pharmacy', label: 'Prepare Potion', min: 1, max: 10 },
   potionLearning: { selector: '#potion-learning', label: 'Potion Research', min: 5, max: 10 },
   potionInstruction: { selector: '#potion-instruction', label: 'Instruction Change', min: 0, max: 5 },
-  potionJob: { selector: '#potion-job', label: 'Job Level สำหรับปรุงยา', min: 1, max: 70 },
 };
 const RUNE_STONES = [4, 8, 15, 30, 60];
 const icons = {
@@ -25,6 +25,10 @@ const number = (value) => formatNumber.format(value);
 const percent = (value) => value.toFixed(2);
 let revision = 0;
 let timer;
+let migrationPending = false;
+let lastSettings = null;
+const escapeHTML = (value) => String(value).replace(/[&<>"']/g, (char) => ({'&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'}[char]));
+const profileFor = (id) => JOB_PROFILES.find((profile) => profile.id === id);
 
 function populateRecipes(selector, recipes) {
   $(selector).replaceChildren(...recipes.map((recipe) => {
@@ -62,33 +66,75 @@ function rangeMarkup(min, max) {
 }
 
 function statInputs(target, type, values) {
-  $(target).innerHTML = STATS.map((stat) => `<label class="stat-field" for="${type}-${stat}">${stat}<input id="${type}-${stat}" name="${type}-${stat}" type="number" inputmode="${type === 'base' ? 'numeric' : 'decimal'}" min="${type === 'base' ? 1 : -999}" max="${type === 'base' ? 130 : 999}" step="${type === 'base' ? 1 : 'any'}" value="${values[stat]}" aria-label="${type === 'base' ? 'สเตตัสปัจจุบัน' : 'โบนัส'} ${stat}"></label>`).join('');
+  $(target).innerHTML = STATS.map((stat) => `<label class="stat-field" for="${type}-${stat}">${stat}<input id="${type}-${stat}" name="${type}-${stat}" type="number" inputmode="${type === 'base' ? 'numeric' : 'decimal'}" min="${type === 'base' ? 1 : -999}" max="${type === 'base' ? 130 : 999}" step="${type === 'base' ? 1 : 'any'}" value="${values[stat]}" aria-label="${type === 'base' ? 'สเตตัสปัจจุบัน' : 'โบนัสอุปกรณ์ / บัฟ ไม่รวม Job Bonus'} ${stat}"></label>`).join('');
 }
 statInputs('#base-stats', 'base', ALL_ONES);
 statInputs('#bonus-stats', 'bonus', ALL_ZEROES);
 
+function populateProfiles() {
+  $('#profile-controls').innerHTML = ACTIVITIES.map((activity) => `<fieldset class="profile-control ${activity.id}"><legend>${names[activity.id]}</legend><div class="profile-fields"><label for="class-${activity.id}">อาชีพ<select id="class-${activity.id}" name="class-${activity.id}" form="planner-form" aria-describedby="profile-${activity.id}-hint">${JOB_PROFILES.filter((profile) => profile.activity === activity.id).map((profile) => `<option value="${profile.id}">${escapeHTML(profile.name)}</option>`).join('')}</select></label><label for="job-${activity.id}">Job Level<input id="job-${activity.id}" name="job-${activity.id}" form="planner-form" type="number" inputmode="numeric" min="1" step="1" aria-describedby="profile-${activity.id}-hint profile-${activity.id}-change"></label></div><p class="profile-hint" id="profile-${activity.id}-hint"></p><p class="profile-change" id="profile-${activity.id}-change" role="status" hidden></p><details class="profile-source"><summary>ข้อมูล Job Bonus</summary><p id="profile-${activity.id}-source"></p></details></fieldset>`).join('');
+}
+populateProfiles();
+
+function cleanProfiles(source, legacy) {
+  return Object.fromEntries(ACTIVITIES.map(({id}) => {
+    let requested = source?.[id];
+    if (legacy) {
+      let classId = DEFAULT_PROFILES[id].classId;
+      if (legacy.cap === 99 && id === 'poison') classId = 'assassin-cross';
+      if (legacy.cap === 99 && id === 'potion') classId = legacy.transcended ? 'creator' : 'alchemist';
+      const oldJob = id === 'rune' ? legacy.formula?.runeJob : id === 'potion' ? legacy.formula?.potionJob : undefined;
+      requested = {classId, jobLevel: oldJob ?? DEFAULT_PROFILES[id].jobLevel};
+    }
+    const profile = JOB_PROFILES.find((candidate) => candidate.id === requested?.classId && candidate.activity === id) ?? profileFor(DEFAULT_PROFILES[id].classId);
+    const job = Number.isInteger(requested?.jobLevel) ? requested.jobLevel : DEFAULT_PROFILES[id].jobLevel;
+    return [id, {classId: profile.id, jobLevel: Math.min(profile.maxJob, Math.max(1, job))}];
+  }));
+}
+
+function saveSettings(settings) {
+  try { localStorage.setItem(STORAGE_KEY, JSON.stringify({...settings, schema: 2, migrationPending})); }
+  catch { /* The calculator also works when browser storage is unavailable. */ }
+}
+
 function loadSaved() {
   try {
-    const saved = JSON.parse(localStorage.getItem(STORAGE_KEY));
+    const current = localStorage.getItem(STORAGE_KEY);
+    const legacy = current === null ? JSON.parse(localStorage.getItem(LEGACY_STORAGE_KEY)) : null;
+    const saved = current !== null ? JSON.parse(current) : legacy;
     if (!saved || typeof saved !== 'object' || Array.isArray(saved)) return DEFAULTS;
+    const isLegacy = Boolean(legacy);
     const cleanStats = (source, fallback) => Object.fromEntries(STATS.map((stat) => [stat, typeof source?.[stat] === 'number' && Number.isFinite(source[stat]) ? source[stat] : fallback]));
-    return {
+    const settings = {
+      schema: 2,
       level: Number.isInteger(saved.level) && saved.level >= 1 && saved.level <= 200 ? saved.level : 99,
-      cap: saved.cap === 99 ? 99 : 130,
       transcended: saved.transcended === true,
       custom: saved.custom === true,
       budget: Number.isSafeInteger(saved.budget) && saved.budget >= 0 && saved.budget <= 1000000 ? saved.budget : totalPoints(99, false),
       mode: saved.mode === 'reset' ? 'reset' : 'current',
       base: cleanStats(saved.base, 1),
-      bonuses: cleanStats(saved.bonuses, 0),
+      bonuses: isLegacy ? {...ALL_ZEROES} : cleanStats(saved.bonuses, 0),
       formula: cleanFormula(saved.formula),
+      profiles: cleanProfiles(saved.profiles, isLegacy ? saved : null),
+      migrationPending: isLegacy || saved.migrationPending === true,
+      migrationPreviousBonuses: isLegacy ? cleanStats(saved.bonuses, 0) : saved.migrationPreviousBonuses,
     };
+    migrationPending = settings.migrationPending;
+    // Save the migration immediately, even if a preserved value needs correction.
+    // Never subtract a guessed Job Bonus from the ambiguous legacy bonus values.
+    if (isLegacy) saveSettings(settings);
+    return settings;
   } catch { return DEFAULTS; }
 }
 
 function applySettings(settings) {
+  migrationPending = settings.migrationPending === true;
+  lastSettings = settings;
+  $('#migration-notice').hidden = !migrationPending;
+  const oldBonuses = $('#migration-old-values');
+  oldBonuses.hidden = !settings.migrationPreviousBonuses;
+  oldBonuses.textContent = settings.migrationPreviousBonuses ? `โบนัสเดิม (อาจรวม Job Bonus): ${STATS.map((stat) => `${stat} ${number(settings.migrationPreviousBonuses[stat] ?? 0)}`).join(' · ')}` : '';
   $('#level').value = settings.level;
-  $('#cap').value = settings.cap;
   $('#transcended').checked = settings.transcended;
   $('#custom-budget-enabled').checked = settings.custom;
   $('#custom-budget').value = settings.budget;
@@ -97,8 +143,13 @@ function applySettings(settings) {
     $(`#base-${stat}`).value = settings.base[stat];
     $(`#bonus-${stat}`).value = settings.bonuses[stat];
   });
+  const profiles = cleanProfiles(settings.profiles);
+  ACTIVITIES.forEach(({id}) => {
+    $(`#class-${id}`).value = profiles[id].classId;
+    $(`#job-${id}`).value = profiles[id].jobLevel;
+    $(`#profile-${id}-change`).hidden = true;
+  });
   const formula = cleanFormula(settings.formula);
-  if (settings.cap === 99) formula.potionJob = Math.min(formula.potionJob, 50);
   Object.entries(FORMULA_FIELDS).forEach(([key, field]) => { $(field.selector).value = formula[key]; });
   $('#rune-stone').value = formula.runeStone;
   $('#rune-recipe').value = formula.runeRecipe;
@@ -107,15 +158,24 @@ function applySettings(settings) {
 }
 
 function syncControls() {
-  const cap = Number($('#cap').value);
-  const thirdClass = cap === 130;
-  $('#level').min = thirdClass ? '99' : '1';
-  $('#level').max = thirdClass ? '200' : '99';
-  $('#potion-job').max = thirdClass ? '70' : '50';
-  $('#level-hint').textContent = thirdClass ? 'Class 3: เลเวล 99–200 ตามโมเดลต้นทาง' : 'Class 2: เลเวล 1–99 ตามโมเดลต้นทาง';
-  STATS.forEach((stat) => { $(`#base-${stat}`).max = String(cap); });
   $('#custom-budget-field').hidden = !$('#custom-budget-enabled').checked;
   $('#custom-budget').disabled = !$('#custom-budget-enabled').checked;
+  ACTIVITIES.forEach(({id}) => {
+    const profile = profileFor($(`#class-${id}`).value);
+    if (!profile) return;
+    $(`#job-${id}`).max = String(profile.maxJob);
+    $(`#profile-${id}-hint`).textContent = `Base ${profile.minBase}–${profile.maxBase} · เพดาน ${profile.cap} · Job 1–${profile.maxJob}`;
+    const source = $(`#profile-${id}-source`);
+    source.replaceChildren(document.createTextNode(profile.sourceNote || 'Job Bonus คิดจากอาชีพปัจจุบัน ไม่บวกสะสมจากอาชีพก่อนหน้า'));
+    if (profile.sourceUrl?.startsWith('https://')) {
+      const link = document.createElement('a');
+      link.href = profile.sourceUrl;
+      link.target = '_blank';
+      link.rel = 'noopener noreferrer';
+      link.textContent = ' แหล่งข้อมูล ↗';
+      source.append(link);
+    }
+  });
   const rune = RUNE_RECIPES.find((recipe) => recipe.id === $('#rune-recipe').value);
   $('#rune-skill').min = String(rune?.minSkill ?? 1);
   $('#rune-source-conflict').hidden = rune?.id !== 'lux-anima';
@@ -123,7 +183,7 @@ function syncControls() {
   const potion = POTION_RECIPES.find((recipe) => recipe.id === $('#potion-recipe').value);
   $('#potion-recipe-hint').textContent = potion ? `Potion_Rate: ${formatRange(potion.min, potion.max, 0)} pp · แหล่งข้อมูลระบุว่าสูตรมีข้อโต้แย้ง` : 'กรุณาเลือกไอเท็มปรุงยา';
   $('#mode-hint').textContent = $('input[name="mode"]:checked').value === 'reset'
-    ? 'จัดสรรแต้มใหม่ทั้งหมด โดยเริ่มทุกสเตตัสจาก 1'
+    ? 'จัดสรรแต้มใหม่ทั้งหมดจาก 1 · ค่าปัจจุบันยังต้องอยู่ในเพดานและงบของอาชีพที่เลือก'
     : 'รักษาทุกค่าที่อัปแล้ว และจัดสรรแต้มที่เหลือ';
 }
 
@@ -139,69 +199,95 @@ function parseInput(selector, name, min, max, integer = true) {
 }
 
 function readFormula() {
-  const formula = Object.fromEntries(Object.entries(FORMULA_FIELDS).map(([key, field]) => [key, parseInput(field.selector, field.label, field.min, key === 'potionJob' && Number($('#cap').value) === 99 ? 50 : field.max)]));
-  formula.runeStone = Number($('#rune-stone').value);
-  formula.runeRecipe = $('#rune-recipe').value;
-  formula.potionRecipe = $('#potion-recipe').value;
-  const rune = RUNE_RECIPES.find((recipe) => recipe.id === formula.runeRecipe);
-  if (!RUNE_STONES.includes(formula.runeStone) || !rune || !POTION_RECIPES.some((recipe) => recipe.id === formula.potionRecipe)) {
-    $('#formula-details').open = true;
-    throw new Error('กรุณาเลือกหิน รูน และไอเท็มปรุงยาจากตัวเลือกที่มี');
+  const formula = {...FORMULA_DEFAULTS};
+  const errors = {};
+  for (const id of ['rune', 'potion']) {
+    try {
+      Object.entries(FORMULA_FIELDS).filter(([key]) => key.startsWith(id)).forEach(([key, field]) => {
+        formula[key] = parseInput(field.selector, field.label, field.min, field.max);
+      });
+      if (id === 'rune') {
+        formula.runeStone = Number($('#rune-stone').value);
+        formula.runeRecipe = $('#rune-recipe').value;
+        const rune = RUNE_RECIPES.find((recipe) => recipe.id === formula.runeRecipe);
+        if (!RUNE_STONES.includes(formula.runeStone) || !rune) throw new Error('กรุณาเลือกหินและชนิดรูนจากตัวเลือกที่มี');
+        if (formula.runeSkill < rune.minSkill) {
+          $('#rune-skill').setAttribute('aria-invalid', 'true');
+          throw new Error(`${rune.label} ต้องมี Rune Mastery อย่างน้อย ${rune.minSkill}`);
+        }
+      } else {
+        formula.potionRecipe = $('#potion-recipe').value;
+        if (!POTION_RECIPES.some((recipe) => recipe.id === formula.potionRecipe)) throw new Error('กรุณาเลือกไอเท็มปรุงยาจากตัวเลือกที่มี');
+      }
+    } catch (error) {
+      $('#formula-details').open = true;
+      errors[id] = error.message;
+    }
   }
-  if (formula.runeSkill < rune.minSkill) {
-    $('#rune-skill').setAttribute('aria-invalid', 'true');
-    $('#formula-details').open = true;
-    throw new Error(`${rune.label} ต้องมี Rune Mastery อย่างน้อย ${rune.minSkill}`);
-  }
-  return formula;
+  return {formula, errors};
 }
 
 function readSettings() {
   document.querySelectorAll('[aria-invalid="true"]').forEach((input) => input.removeAttribute('aria-invalid'));
-  const cap = Number($('#cap').value);
-  if (![99, 130].includes(cap)) throw new Error('กรุณาเลือกเพดานสเตตัส 99 หรือ 130');
-  const level = parseInput('#level', `Base Level สำหรับ Class ${cap === 130 ? 3 : 2}`, cap === 130 ? 99 : 1, cap === 130 ? 200 : 99);
+  const level = parseInput('#level', 'Base Level', 1, 200);
   const transcended = $('#transcended').checked;
   const custom = $('#custom-budget-enabled').checked;
   const budget = custom ? parseInput('#custom-budget', 'แต้มรวมทั้งหมด', 0, 1000000) : totalPoints(level, transcended);
-  const base = Object.fromEntries(STATS.map((stat) => [stat, parseInput(`#base-${stat}`, stat, 1, cap)]));
-  const bonuses = Object.fromEntries(STATS.map((stat) => [stat, parseInput(`#bonus-${stat}`, `โบนัส ${stat}`, -999, 999, false)]));
-  const formula = readFormula();
-  const spent = costOf(base);
-  if (spent > budget) throw new Error(`สเตตัสปัจจุบันใช้ ${number(spent)} แต้ม แต่มีงบ ${number(budget)} แต้ม กรุณาลดสเตตัสหรือปรับแต้มรวม`);
-  return { level, cap, transcended, custom, budget, mode: $('input[name="mode"]:checked').value, base, bonuses, formula, spent };
-}
-
-function availability(activity, settings) {
-  if (settings.cap === 130) return null;
-  if (activity.id === 'rune') return { title: 'สำหรับโปรไฟล์ Class 3', text: 'โมเดลรูนใช้โปรไฟล์เพดานสเตตัส 130<br>เปลี่ยนโปรไฟล์เพื่อเริ่มวางแผนสร้างรูน', action: 'class3', label: 'เปลี่ยนเป็น Class 3', stats: ['DEX', 'LUK'] };
-  if (activity.id === 'poison' && !settings.transcended) return { title: 'Assassin Cross ต้องจุติ', text: 'สูตร Class 2 อ้างอิงตัวละครที่จุติแล้ว<br>เปิดการจุติเพื่อคำนวณด้วยงบที่ถูกต้อง', action: 'rebirth', label: 'เลือกผ่านการจุติแล้ว', stats: ['DEX', 'LUK'] };
-  if (activity.id === 'potion' && settings.transcended) return { title: 'Alchemist ในโมเดลไม่จุติ', text: 'สำหรับสูตรตัวละครที่จุติแล้ว<br>เลือก Genetic ใน Class 3', action: 'class3', label: 'เปลี่ยนเป็น Class 3', stats: ['INT', 'DEX', 'LUK'] };
-  return null;
+  const base = Object.fromEntries(STATS.map((stat) => [stat, parseInput(`#base-${stat}`, stat, 1, 130)]));
+  const bonuses = Object.fromEntries(STATS.map((stat) => [stat, parseInput(`#bonus-${stat}`, `โบนัสอุปกรณ์ / บัฟ ${stat}`, -999, 999, false)]));
+  const {formula, errors} = readFormula();
+  const profiles = Object.fromEntries(ACTIVITIES.map(({id}) => {
+    const classId = $(`#class-${id}`).value;
+    const profile = profileFor(classId);
+    let jobLevel;
+    try {
+      if (!profile || profile.activity !== id) throw new Error('กรุณาเลือกอาชีพที่รองรับกิจกรรมนี้');
+      jobLevel = parseInput(`#job-${id}`, `${profile.name}: Job Level`, 1, profile.maxJob);
+    } catch (error) { errors[id] = error.message; }
+    return [id, {classId, jobLevel}];
+  }));
+  // These are the only Job Level sources for the crafting formulas.
+  formula.runeJob = profiles.rune.jobLevel;
+  formula.potionJob = profiles.potion.jobLevel;
+  return {schema: 2, level, transcended, custom, budget, mode: $('input[name="mode"]:checked').value, base, bonuses, formula, profiles, errors, spent: costOf(base), migrationPending, migrationPreviousBonuses: lastSettings?.migrationPreviousBonuses};
 }
 
 function subtitle(activity, settings) {
-  const skill = { rune: 'Rune Mastery', poison: 'Create Deadly Poison', potion: 'Prepare Potion' }[activity.id];
-  const job = settings.cap === 130
-    ? { rune: 'Rune Knight', poison: 'Guillotine Cross', potion: 'Genetic' }[activity.id]
-    : { rune: 'Rune Knight', poison: 'Assassin Cross', potion: 'Alchemist' }[activity.id];
-  return `${job}<span class="activity-skill">${skill}</span>`;
+  const skill = {rune: 'Rune Mastery', poison: 'Create Deadly Poison', potion: 'Prepare Potion'}[activity.id];
+  const selection = settings.profiles[activity.id];
+  const profile = profileFor(selection.classId);
+  return `${escapeHTML(profile?.name ?? '')} · Job ${Number.isInteger(selection.jobLevel) ? selection.jobLevel : '—'}<span class="activity-skill">${skill}</span>`;
+}
+
+function profileContext(activity, settings, resolved) {
+  const profile = resolved?.profile ?? profileFor(settings.profiles[activity.id].classId);
+  if (!profile) return '';
+  const isTranscended = resolved?.transcended ?? (profile.forceTrans === null ? settings.transcended : profile.forceTrans);
+  let budget = resolved?.budget;
+  if (budget === undefined && Number.isInteger(settings.level) && settings.level >= 1 && settings.level <= 200) {
+    budget = settings.custom ? settings.budget : totalPoints(settings.level, isTranscended);
+  }
+  return `<div class="profile-context"><span>เพดาน Base <strong>${profile.cap}</strong></span><span>งบ <strong>${Number.isFinite(budget) ? number(budget) : '—'}</strong> แต้ม</span><small>${isTranscended ? 'จุติแล้ว' : 'ไม่จุติ'}${profile.forceTrans === null ? ' · ตามค่าร่วม' : ' · ตามอาชีพ'}${settings.custom ? ' · กำหนดงบเอง' : ''}</small></div>`;
 }
 
 function modelLabel(activity) {
   return activity.id === 'potion' ? 'สูตรปรุงยามีข้อโต้แย้ง · ค่าดิบตามช่วงไอเท็ม' : 'ค่าดิบตาม iRO Wiki · อาจเกิน 100%';
 }
 
-function cardHeader(activity, settings) {
-  return `<div class="card-head"><div class="activity-icon">${`<svg viewBox="0 0 24 24" aria-hidden="true">${icons[activity.id]}</svg>`}</div><h3 class="activity-name" id="activity-${activity.id}">${names[activity.id]}</h3><p class="activity-subtitle">${subtitle(activity, settings)}</p></div>`;
+function cardHeader(activity, settings, resolved) {
+  return `<div class="card-head"><div class="activity-icon"><svg viewBox="0 0 24 24" aria-hidden="true">${icons[activity.id]}</svg></div><h3 class="activity-name" id="activity-${activity.id}">${names[activity.id]}</h3><p class="activity-subtitle">${subtitle(activity, settings)}</p>${profileContext(activity, settings, resolved)}</div>`;
 }
 
-function lockedCard(activity, settings, unavailable) {
-  return `<article class="result-card ${activity.id} locked" aria-labelledby="activity-${activity.id}">${cardHeader(activity, settings)}<div class="locked-body"><div class="lock-symbol" aria-hidden="true">◇</div><h4>${unavailable.title}</h4><p>${unavailable.text}</p><button type="button" class="unlock-button" data-action="${unavailable.action}">${unavailable.label} <span aria-hidden="true">↗</span></button><div class="locked-stats" aria-hidden="true">${unavailable.stats.map((stat) => `<span>${stat}</span>`).join('')}</div></div></article>`;
+function lockedCard(activity, settings, message) {
+  return `<article class="result-card ${activity.id} locked" aria-labelledby="activity-${activity.id}" data-activity="${activity.id}" data-state="invalid">${cardHeader(activity, settings)}<div class="locked-body"><div class="lock-symbol" aria-hidden="true">◇</div><h4>ตรวจสอบค่าของกิจกรรมนี้</h4><p class="card-error" role="status">${escapeHTML(message)}</p><p>ปรับอาชีพ / Job Level หรือค่าร่วมด้านซ้าย<br>กิจกรรมอื่นยังคำนวณได้ตามปกติ</p><button type="button" class="unlock-button" data-focus="class-${activity.id}">ไปที่การตั้งค่าอาชีพ ↑</button></div></article>`;
 }
 
-function activeCard(activity, settings, result, elapsed) {
-  const current = successRange(activity.id, settings.base, settings.bonuses, settings.formula);
+function bonusBreakdown(activity, settings, result, resolved) {
+  return `<div class="bonus-breakdown"><p>Base + Job + อุปกรณ์ / บัฟ = Total</p><table aria-label="องค์ประกอบสเตตัสที่ใช้ในสูตร ${names[activity.id]}"><thead><tr><th scope="col">STAT</th><th scope="col">Base</th><th scope="col">Job</th><th scope="col">อุปกรณ์<br>/ บัฟ</th><th scope="col">Total</th></tr></thead><tbody>${['DEX', 'LUK', 'INT'].map((stat) => `<tr class="${activity.weights[stat] ? 'relevant' : ''}" data-stat="${stat}"><th scope="row">${stat}</th><td data-part="base">${number(result.stats[stat])}</td><td data-part="job">${number(resolved.jobBonuses[stat])}</td><td data-part="gear">${number(settings.bonuses[stat])}</td><td data-part="total">${number(result.stats[stat] + resolved.jobBonuses[stat] + settings.bonuses[stat])}</td></tr>`).join('')}</tbody></table><span>Job Bonus อัตโนมัติ · Total ใช้ในสูตร</span><div class="bonus-source-note${resolved.bonusCaution ? ' is-caution' : ''}"${resolved.bonusCaution ? ' role="note"' : ''}>${escapeHTML(resolved.bonusSourceNote || '')} <a href="${escapeHTML(resolved.bonusSourceUrl || resolved.profile.sourceUrl)}" target="_blank" rel="noopener noreferrer">แหล่งข้อมูล ↗</a></div></div>`;
+}
+
+function activeCard(activity, settings, result, elapsed, resolved, combinedBonuses) {
+  const current = successRange(activity.id, settings.base, combinedBonuses, settings.formula);
   const improvement = Math.abs(result.rate - current.min) < 0.0000001 ? 0 : result.rate - current.min;
   const isRange = Math.abs(result.rateMax - result.rate) >= 0.0000001;
   const clamp = (value) => Math.max(0, Math.min(100, value));
@@ -209,19 +295,19 @@ function activeCard(activity, settings, result, elapsed) {
     const delta = result.stats[stat] - settings.base[stat];
     return `<div class="allocated-stat ${activity.weights[stat] ? 'relevant' : ''}"><dt>${stat}</dt><dd>${result.stats[stat]}${delta !== 0 ? `<small aria-label="${delta > 0 ? 'เพิ่ม' : 'ลด'} ${Math.abs(delta)}">${delta > 0 ? '+' : '−'}${Math.abs(delta)}</small>` : ''}</dd></div>`;
   }).join('');
-  return `<article class="result-card ${activity.id}" aria-labelledby="activity-${activity.id}">${cardHeader(activity, settings)}<div class="rate-body"><div class="comparison-label"><span>ค่าปัจจุบัน</span><span class="current-rate">${formatRange(current.min, current.max)}%</span></div><p class="recommended-label">ค่าสูตรดิบสูงสุดในงบนี้</p><div class="big-rate${isRange ? ' is-range' : ''}">${rangeMarkup(result.rate, result.rateMax)}</div><div class="rate-improvement">${improvement > 0 ? '↗ +' : improvement < 0 ? '↘ ' : '→ '}${percent(improvement)} pp<span class="thai-label">${improvement === 0 ? 'สูงสุดแล้วในงบนี้' : 'จุดเปอร์เซ็นต์'}</span></div><div class="meter" aria-hidden="true"><span class="meter-best" style="width:${clamp(result.rate)}%"></span><span class="meter-current" style="width:${clamp(current.min)}%"></span></div><p class="raw-label">${modelLabel(activity)}</p></div><div class="allocation"><div class="allocation-heading">สเตตัสแนะนำ <span>BASE</span></div><dl class="allocation-grid">${statMarkup}</dl><div class="card-points"><div>แต้มที่ใช้ทั้งหมด<strong>${number(result.spent)}</strong></div><div>แต้มเหลือ<strong>${number(result.remaining)}</strong></div></div></div><div class="card-timing">Exact DP <span>${elapsed < 0.1 ? '< 0.1' : elapsed.toFixed(1)} ms</span></div></article>`;
+  return `<article class="result-card ${activity.id}" aria-labelledby="activity-${activity.id}" data-activity="${activity.id}" data-state="ready">${cardHeader(activity, settings, resolved)}<div class="rate-body"><div class="comparison-label"><span>ค่าปัจจุบัน</span><span class="current-rate">${formatRange(current.min, current.max)}%</span></div><p class="recommended-label">ค่าสูตรดิบสูงสุดในงบนี้</p><div class="big-rate${isRange ? ' is-range' : ''}">${rangeMarkup(result.rate, result.rateMax)}</div><div class="rate-improvement">${improvement > 0 ? '↗ +' : improvement < 0 ? '↘ ' : '→ '}${percent(improvement)} pp<span class="thai-label">${improvement === 0 ? 'สูงสุดแล้วในงบนี้' : 'จุดเปอร์เซ็นต์'}</span></div><div class="meter" aria-hidden="true"><span class="meter-best" style="width:${clamp(result.rate)}%"></span><span class="meter-current" style="width:${clamp(current.min)}%"></span></div><p class="raw-label">${modelLabel(activity)}</p></div><div class="allocation"><div class="allocation-heading">สเตตัสแนะนำ <span>BASE</span></div><dl class="allocation-grid">${statMarkup}</dl>${bonusBreakdown(activity, settings, result, resolved)}<div class="card-points"><div>แต้มที่ใช้ทั้งหมด<strong>${number(result.spent)}</strong></div><div>แต้มเหลือ<strong>${number(result.remaining)}</strong></div></div></div><div class="card-timing">Exact DP <span>${elapsed < 0.1 ? '< 0.1' : elapsed.toFixed(1)} ms</span></div></article>`;
 }
 
 function blankCards(settings) {
-  return ACTIVITIES.map((activity) => {
-    const unavailable = availability(activity, settings);
-    if (unavailable) return lockedCard(activity, settings, unavailable);
-    return `<article class="result-card ${activity.id}" aria-labelledby="activity-${activity.id}">${cardHeader(activity, settings)}<div class="rate-body"><div class="comparison-label"><span>ค่าปัจจุบัน</span><span class="current-rate">—</span></div><p class="recommended-label">ค่าสูตรดิบสูงสุดในงบนี้</p><div class="big-rate">—<small>%</small></div><div class="rate-improvement">รอข้อมูลที่ถูกต้อง</div><div class="meter"></div><p class="raw-label">${modelLabel(activity)}</p></div><div class="allocation"><div class="allocation-heading">สเตตัสแนะนำ <span>BASE</span></div><dl class="allocation-grid">${STATS.map((stat) => `<div class="allocated-stat"><dt>${stat}</dt><dd>—</dd></div>`).join('')}</dl><div class="card-points"><div>แต้มที่ใช้ทั้งหมด<strong>—</strong></div><div>แต้มเหลือ<strong>—</strong></div></div></div><div class="card-timing">Exact DP <span>— ms</span></div></article>`;
-  }).join('');
+  return ACTIVITIES.map((activity) => `<article class="result-card ${activity.id}" aria-labelledby="activity-${activity.id}" data-activity="${activity.id}" data-state="pending">${cardHeader(activity, settings)}<div class="rate-body"><div class="comparison-label"><span>ค่าปัจจุบัน</span><span class="current-rate">—</span></div><p class="recommended-label">ค่าสูตรดิบสูงสุดในงบนี้</p><div class="big-rate">—<small>%</small></div><div class="rate-improvement">รอข้อมูลที่ถูกต้อง</div><div class="meter"></div><p class="raw-label">${modelLabel(activity)}</p></div><div class="allocation"><div class="allocation-heading">สเตตัสแนะนำ <span>BASE</span></div><dl class="allocation-grid">${STATS.map((stat) => `<div class="allocated-stat"><dt>${stat}</dt><dd>—</dd></div>`).join('')}</dl><div class="card-points"><div>แต้มที่ใช้ทั้งหมด<strong>—</strong></div><div>แต้มเหลือ<strong>—</strong></div></div></div><div class="card-timing">Exact DP <span>— ms</span></div></article>`).join('');
 }
 
 function safeSettingsForBlank() {
-  return { cap: Number($('#cap').value) === 99 ? 99 : 130, transcended: $('#transcended').checked };
+  return {
+    level: Number($('#level').value), transcended: $('#transcended').checked,
+    custom: $('#custom-budget-enabled').checked, budget: Number($('#custom-budget').value),
+    profiles: Object.fromEntries(ACTIVITIES.map(({id}) => [id, {classId: $(`#class-${id}`).value, jobLevel: $(`#job-${id}`).value.trim() ? Number($(`#job-${id}`).value) : undefined}])),
+  };
 }
 
 function setStatus(label, state = '') {
@@ -255,7 +341,9 @@ function calculate() {
     return;
   }
   $('#budget-display').innerHTML = `${number(settings.budget)}<small>POINTS</small>`;
-  $('#budget-source').textContent = settings.custom ? 'กำหนดเอง · แต้มทั้งหมด' : `เลเวล ${settings.level}${settings.transcended ? ' · จุติแล้ว' : ' · ไม่จุติ'}`;
+  $('#budget-source').textContent = settings.custom ? 'กำหนดเอง · ใช้ทุกกิจกรรม' : `เลเวล ${settings.level} · ดูงบตามอาชีพในการ์ด`;
+  lastSettings = settings;
+  saveSettings(settings);
   $('#spent-display').textContent = `ใช้แล้ว ${number(settings.spent)}`;
   setStatus('กำลังคำนวณ', 'pending');
   $('#results-panel').setAttribute('aria-busy', 'true');
@@ -269,21 +357,26 @@ function calculate() {
       let operations = 0;
       let count = 0;
       const cards = ACTIVITIES.map((activity) => {
-        const unavailable = availability(activity, settings);
-        if (unavailable) return lockedCard(activity, settings, unavailable);
-        const itemStart = performance.now();
-        const result = optimize({ activity: activity.id, budget: settings.budget, cap: settings.cap, base: baseline, bonuses: settings.bonuses, formula: settings.formula });
-        const elapsed = performance.now() - itemStart;
-        operations += result.operations;
-        count++;
-        return activeCard(activity, settings, result, elapsed);
+        try {
+          if (settings.errors[activity.id]) throw new Error(settings.errors[activity.id]);
+          const selection = settings.profiles[activity.id];
+          const resolved = resolveProfile({activity: activity.id, ...selection, level: settings.level, transcended: settings.transcended, budgetOverride: settings.custom ? settings.budget : null, base: settings.base});
+          const combinedBonuses = combineBonuses(settings.bonuses, resolved.jobBonuses);
+          const itemStart = performance.now();
+          const result = optimize({activity: activity.id, budget: resolved.budget, cap: resolved.cap, base: baseline, bonuses: combinedBonuses, formula: settings.formula});
+          const elapsed = performance.now() - itemStart;
+          operations += result.operations;
+          count++;
+          return activeCard(activity, settings, result, elapsed, resolved, combinedBonuses);
+        } catch (error) {
+          return lockedCard(activity, settings, error.message);
+        }
       });
       const elapsed = performance.now() - started;
       $('#result-cards').innerHTML = cards.join('');
       $('#results-panel').classList.remove('is-stale');
       $('#calculation-info').textContent = `${count} กิจกรรม · ${elapsed < 0.1 ? '< 0.1' : elapsed.toFixed(1)} ms · ${number(operations)} ขั้นตอน DP`;
-      setStatus(settings.mode === 'reset' ? 'จัดสรรใหม่ทั้งหมด' : 'คำนวณแล้ว');
-      try { localStorage.setItem(STORAGE_KEY, JSON.stringify(settings)); } catch { /* Storage may be unavailable; the calculator still works. */ }
+      setStatus(count === 0 ? 'ตรวจสอบค่าของแต่ละกิจกรรม' : count < ACTIVITIES.length ? `คำนวณได้ ${count} / ${ACTIVITIES.length} กิจกรรม` : settings.mode === 'reset' ? 'จัดสรรใหม่ทั้งหมด' : 'คำนวณแล้ว', count === 0 ? 'error' : '');
     } catch (error) {
       clearResults();
       $('#form-error').textContent = `คำนวณไม่สำเร็จ: ${error.message}`;
@@ -309,30 +402,37 @@ function scheduleCalculation() {
 }
 
 $('#planner-form').addEventListener('submit', (event) => { event.preventDefault(); calculate(); });
-$('#planner-form').addEventListener('input', (event) => {
-  if (event.target.id === 'cap') {
-    const level = Number($('#level').value);
-    if (event.target.value === '99' && level > 99) $('#level').value = '99';
-    if (event.target.value === '99' && Number($('#potion-job').value) > 50) $('#potion-job').value = '50';
-    if (event.target.value === '130' && level < 99) $('#level').value = '99';
+function handleInput(event) {
+  if (event.target.id.startsWith('class-')) {
+    const id = event.target.id.slice('class-'.length);
+    const profile = profileFor(event.target.value);
+    const input = $(`#job-${id}`);
+    const message = $(`#profile-${id}-change`);
+    if (profile && Number(input.value) > profile.maxJob) {
+      input.value = String(profile.maxJob);
+      message.textContent = `ปรับ Job Level เป็น ${profile.maxJob} ตามเพดานของ ${profile.name}`;
+      message.hidden = false;
+    } else {
+      message.hidden = true;
+    }
   }
   scheduleCalculation();
-});
+}
+$('#planner-form').addEventListener('input', handleInput);
+$('#profile-controls').addEventListener('input', handleInput);
 $('#clear-stats').addEventListener('click', () => {
   STATS.forEach((stat) => { $(`#base-${stat}`).value = '1'; });
   calculate();
 });
-$('#reset-settings').addEventListener('click', () => { applySettings(DEFAULTS); calculate(); });
+$('#reset-settings').addEventListener('click', () => { applySettings({...DEFAULTS, migrationPending, migrationPreviousBonuses: lastSettings?.migrationPreviousBonuses}); calculate(); });
+$('#acknowledge-migration').addEventListener('click', () => {
+  migrationPending = false;
+  $('#migration-notice').hidden = true;
+  if (lastSettings) saveSettings(lastSettings);
+});
 $('#result-cards').addEventListener('click', (event) => {
-  const button = event.target.closest('button[data-action]');
-  if (!button) return;
-  if (button.dataset.action === 'class3') {
-    $('#cap').value = '130';
-    if (Number($('#level').value) < 99) $('#level').value = '99';
-    $('#cap').focus();
-  }
-  if (button.dataset.action === 'rebirth') { $('#transcended').checked = true; $('#transcended').focus(); }
-  calculate();
+  const button = event.target.closest('button[data-focus]');
+  if (button) document.getElementById(button.dataset.focus)?.focus();
 });
 
 applySettings(loadSaved());

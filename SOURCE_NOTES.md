@@ -96,3 +96,27 @@ Player reports add context, not controlled verification:
 - [WarpPortal Bottle Grenade discussion2014](https://forums.warpportal.com/index.php?/topic/145921-why-do-i-still-fail-when-i-make-bottle-grenades/): players discuss±5 modifier, later incorporated into Wiki. This is **provenance for the Wiki**, not independent replication
 
 Confidence is highest for CDP's linear coefficients, good but qualified for Rune's documented base/material terms, and lower for exact Potion outcomes. No current controlled iRO test establishes every rounding/cap/RNG detail. Hence this release removes the generic development placeholder but retains named evidence limitations.
+
+## Automatic class-specific Job stat bonuses
+
+The app counts +1 increments at or below the selected class's current Job Level. It does **not** stack first/second/previous job bonuses. The selected Job Level also supplies the distinct direct formula term for Rune/Prepare Potion. Equipment and buff inputs exclude Job bonuses and are added once after the per-class lookup.
+
+Current-class-only calculation is corroborated by [iRO Wiki Levels](https://irowiki.org/wiki/Levels#Job_Level) and pinned [rAthena current-job lookup](https://github.com/rathena/rathena/blob/e985006171d2eb320ee512a653f4c83aea3d81b6/src/map/status.cpp#L4249-L4259). Third-class trans/nontrans share bonus values in [rAthena PR8669](https://github.com/rathena/rathena/pull/8669); rebirth affects the allocation budget separately.
+
+| Class | Max Job supported | STR/AGI/VIT/INT/DEX/LUK at that Job | Evidence |
+|---|---:|---|---|
+| Alchemist |50|5/6/3/7/9/0|[Wiki complete](https://irowiki.org/wiki/Alchemist#Job_Bonuses), matches pinned rAthena|
+| Creator / Biochemist |70|4/6/3/7/14/11|[Wiki complete](https://irowiki.org/wiki/Biochemist#Job_Bonuses), matches pinned rAthena|
+| Rune Knight |70|6/6/7/10/9/5|[Wiki complete](https://irowiki.org/wiki/Rune_Knight#Job_Bonuses), matches pinned rAthena|
+| Assassin Cross |70|9/15/3/0/10/8|[Wiki](https://irowiki.org/wiki/Assassin_Cross#Job_Bonuses) agrees on crafting stats; AGI first increment discrepancy described below|
+| Guillotine Cross |70|8/11/6/5/9/4|[Wiki through65](https://irowiki.org/wiki/Guillotine_Cross#Job_Bonuses), later events supplemented|
+| Genetic |70|5/6/8/12/8/4|[Wiki detailed through60](https://irowiki.org/wiki/Geneticist#Job_Bonuses), later events supplemented; Wiki infobox reflects65 totals|
+
+Explicit supplemental events from pinned rAthena Renewal, **not independently verified live iRO**:
+- GX: DEX at67, LUK at69, AGI at70; [source](https://github.com/rathena/rathena/blob/e985006171d2eb320ee512a653f4c83aea3d81b6/db/re/job_stats.yml#L3415-L3510)
+- Genetic: LUK61/66, STR62/67, VIT64/69; [source](https://github.com/rathena/rathena/blob/e985006171d2eb320ee512a653f4c83aea3d81b6/db/re/job_stats.yml#L3986-L4090)
+- Assassin Cross: rAthena AGI startsJob1; Wiki table saysJob3. App uses rAthena atJob1–2 and discloses this discrepancy; allcraft-relevant DEX/LUK/INT match, and cumulativeAGI agrees fromJob3. [source](https://github.com/rathena/rathena/blob/e985006171d2eb320ee512a653f4c83aea3d81b6/db/re/job_stats.yml#L1918-L2013)
+
+Remaining exact-event sources: [Alchemist](https://github.com/rathena/rathena/blob/e985006171d2eb320ee512a653f4c83aea3d81b6/db/re/job_stats.yml#L1043-L1110), [Biochemist](https://github.com/rathena/rathena/blob/e985006171d2eb320ee512a653f4c83aea3d81b6/db/re/job_stats.yml#L2401-L2500), [RuneKnight](https://github.com/rathena/rathena/blob/e985006171d2eb320ee512a653f4c83aea3d81b6/db/re/job_stats.yml#L2936-L3040).
+
+The app's `job-bonus-data.js` stores every increment level and its provenance, so intermediate levels are calculated rather than interpolated from max totals. Job1 may already grant a stat point. Every event boundary is tested. These job tables do not expand the existing base-level/cost model into fourth jobs or all current iRO content.
