@@ -1,0 +1,92 @@
+<!doctype html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#101b27">
+  <meta name="description" content="วางแผนสเตตัส Ragnarok Online สำหรับปรุงยา สร้างพิษ และสร้างรูน ด้วยตัวค้นหาค่าที่ดีที่สุดแบบ Dynamic Programming">
+  <title>STAT FORGE · RO Stat Planner</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='16' fill='%23101b27'/%3E%3Cpath d='M32 9 51 32 32 55 13 32Z' fill='%2377ddc0'/%3E%3Cpath d='M32 18v28M21 32h22' stroke='%23101b27' stroke-width='4'/%3E%3C/svg%3E">
+  <link rel="stylesheet" href="./styles.css">
+  <script type="module" src="./app.js"></script>
+</head>
+<body>
+  <a class="skip-link" href="#planner">ข้ามไปเครื่องคำนวณ</a>
+  <header class="site-header shell">
+    <a class="brand" href="./" aria-label="STAT FORGE หน้าหลัก">
+      <svg class="brand-mark" viewBox="0 0 40 40" aria-hidden="true"><path d="M20 3 35 20 20 37 5 20Z"/><path d="M20 12v16M13 20h14"/></svg>
+      <span>STAT<span class="brand-thin">FORGE</span><small>RAGNAROK ONLINE · STAT PLANNER</small></span>
+    </a>
+    <nav aria-label="เมนูหลัก"><a href="#method">วิธีคำนวณ <span aria-hidden="true">↗</span></a><a class="source-link" href="https://github.com/econDS/RO-help-tool/tree/1cc20f489887228eec0ff5b91e4c5fe71c75961f" target="_blank" rel="noopener noreferrer">ดูสูตรต้นทาง <span aria-hidden="true">↗</span></a></nav>
+  </header>
+
+  <main class="shell">
+    <section class="hero" aria-labelledby="hero-title">
+      <div class="hero-copy">
+        <div class="eyebrow"><span class="tiny-diamond" aria-hidden="true"></span> CRAFT SMARTER. SPEND WISER.</div>
+        <h1 id="hero-title">ทุกแต้ม <span>มีความหมาย</span></h1>
+        <p>หาสเตตัสที่คุ้มที่สุดสำหรับสายคราฟต์ของคุณ<br class="desktop-break"> เปรียบเทียบปรุงยา สร้างพิษ และสร้างรูนในที่เดียว</p>
+        <div class="hero-tags"><span><i aria-hidden="true"></i> ค้นหาค่าที่ดีที่สุดแบบ Exact DP</span><span>ไม่ต้องไล่ลองทุกชุด</span></div>
+      </div>
+      <div class="hero-art" aria-hidden="true">
+        <svg viewBox="0 0 420 260" role="presentation">
+          <defs><linearGradient id="crystal" x1="0" x2="1" y1="0" y2="1"><stop stop-color="#a9f3d6"/><stop offset="1" stop-color="#42aeb0"/></linearGradient><linearGradient id="glass" x1="0" x2="1"><stop stop-color="#244350"/><stop offset="1" stop-color="#172d3a"/></linearGradient><radialGradient id="halo"><stop stop-color="#386d68" stop-opacity=".35"/><stop offset="1" stop-color="#223b45" stop-opacity="0"/></radialGradient></defs>
+          <ellipse cx="220" cy="133" rx="150" ry="120" fill="url(#halo)"/>
+          <circle cx="220" cy="130" r="96" fill="none" stroke="#395459" stroke-width="1"/><circle cx="220" cy="130" r="114" fill="none" stroke="#29404b" stroke-dasharray="2 10"/>
+          <path d="m220 17 98 57v112l-98 56-98-56V74Z" fill="none" stroke="#395459"/>
+          <path d="m220 17-98 169h196Z" fill="none" stroke="#29434a"/><path d="M122 74h196L220 242Z" fill="none" stroke="#29434a"/>
+          <path d="m189 61 29-15 34 14-12 27h-40Z" fill="#aa8070"/><path d="m191 60 29 12 32-12-8 14-25 11-22-12Z" fill="#c3977e"/>
+          <path d="M201 81v33l-34 45q-9 16 4 29l48 27 49-27q13-13 4-29l-33-45V81Z" fill="url(#glass)" stroke="#83c2bd" stroke-width="1.5"/>
+          <path d="m201 81 18 9 20-9M219 91v123" fill="none" stroke="#5b8990"/><path d="m188 146-15 20q-4 7 4 15l42 24 44-24q6-8 3-15l-16-20-31 12Z" fill="url(#crystal)"/><path d="m188 146 31-11 31 11-31 13Z" fill="#adf0d9"/><path d="m219 159 44 22-44 24Z" fill="#66c8b7"/>
+          <path d="m182 165 21 12M201 98v13l-22 32" fill="none" stroke="#c8fff0" stroke-opacity=".5" stroke-width="3" stroke-linecap="round"/>
+          <path d="m293 73 5 10 10 5-10 5-5 10-5-10-10-5 10-5Z" fill="#e2a48b"/><path d="m146 114 3 6 6 3-6 3-3 6-3-6-6-3 6-3Z" fill="#94ddc3"/>
+          <circle cx="220" cy="17" r="4" fill="#81d8bd"/><circle cx="122" cy="74" r="3" fill="#4f7176"/><circle cx="318" cy="74" r="3" fill="#4f7176"/><circle cx="122" cy="186" r="3" fill="#4f7176"/><circle cx="318" cy="186" r="3" fill="#4f7176"/><circle cx="220" cy="242" r="3" fill="#4f7176"/>
+          <g fill="#78949b" font-family="ui-monospace,monospace" font-size="10" letter-spacing="2"><text x="73" y="76">DEX</text><text x="334" y="77">LUK</text><text x="76" y="190">INT</text><text x="333" y="190">VIT</text></g>
+        </svg>
+        <span class="art-caption">GOOD BUILDS START WITH A PLAN</span>
+      </div>
+    </section>
+
+    <div class="notice" role="note"><span class="notice-icon" aria-hidden="true">i</span><p>ใช้เพื่อวางแผนจากสูตรจำลอง <strong>ไม่ใช่อัตราสำเร็จทางการของเกม</strong> สูตรต้นทางยังมี TODO และอาจต่างจากเซิร์ฟเวอร์ที่คุณเล่น</p><a href="#method">อ่านเงื่อนไข <span aria-hidden="true">↓</span></a></div>
+
+    <section class="planner" id="planner" aria-label="เครื่องคำนวณสเตตัส">
+      <aside class="character-panel">
+        <form id="planner-form" novalidate>
+          <div class="panel-heading"><div class="section-number">01</div><div><h2>ตั้งค่าตัวละคร</h2><p>เริ่มจากแต้มที่คุณมี</p></div><button type="button" id="reset-settings" class="icon-button" title="คืนค่าเริ่มต้น" aria-label="คืนค่าเริ่มต้น">↺</button></div>
+          <div class="form-section">
+            <div class="two-columns"><label for="level">Base Level<input id="level" name="level" type="number" inputmode="numeric" min="99" max="200" step="1" value="99" aria-describedby="level-hint"></label><label for="cap">เพดานสเตตัส<select id="cap" name="cap"><option value="99">99 · Class 2</option><option value="130" selected>130 · Class 3</option></select></label></div>
+            <span id="level-hint" class="field-hint">Class 3: เลเวล 99–200 ตามโมเดลต้นทาง</span>
+            <label class="checkbox-label" for="transcended"><input type="checkbox" id="transcended" name="transcended"><span>ผ่านการจุติแล้ว <small>Transcended</small></span></label>
+            <div class="budget-box"><span>แต้มรวมที่ใช้ได้</span><strong id="budget-display">—<small>POINTS</small></strong><div class="budget-foot"><span id="budget-source">ตามเลเวลและการจุติ</span><span id="spent-display">ใช้แล้ว —</span></div></div>
+            <label class="checkbox-label custom-budget-toggle" for="custom-budget-enabled"><input type="checkbox" id="custom-budget-enabled"><span>กำหนดแต้มรวมเอง</span></label>
+            <div id="custom-budget-field" hidden><label for="custom-budget">แต้มรวมทั้งหมด<input id="custom-budget" type="number" inputmode="numeric" min="0" max="1000000" step="1" value="1273" aria-describedby="custom-hint"></label><span id="custom-hint" class="field-hint">แต้มทั้งหมดของตัวละคร รวมแต้มที่ใช้ไปแล้ว</span></div>
+          </div>
+
+          <div class="form-section stats-section"><div class="field-heading"><h3>สเตตัสปัจจุบัน</h3><button type="button" id="clear-stats" class="text-button">ตั้งทั้งหมดเป็น 1</button></div><p class="field-hint">เฉพาะ Base Stat ไม่รวมอุปกรณ์และบัฟ</p><div id="base-stats" class="stats-input-grid"></div>
+            <details class="bonus-details"><summary>โบนัสจากอุปกรณ์ / บัฟ <span aria-hidden="true">+</span></summary><p class="field-hint">บวกในสูตรอัตราสำเร็จ ไม่ใช้แต้มและไม่จำกัดด้วยเพดาน Base Stat</p><div id="bonus-stats" class="stats-input-grid"></div></details>
+          </div>
+          <div class="form-section strategy-section"><h3 id="mode-label">วางแผนแบบไหน?</h3><div class="segmented-control" role="radiogroup" aria-labelledby="mode-label"><label><input type="radio" name="mode" value="current" checked><span>ต่อจากค่าปัจจุบัน</span></label><label><input type="radio" name="mode" value="reset"><span>รีเซ็ตแล้วจัดใหม่</span></label></div><p id="mode-hint" class="field-hint">รักษาทุกค่าที่อัปแล้ว และจัดสรรแต้มที่เหลือ</p><div id="form-error" class="form-error" role="alert" hidden></div><button class="calculate-button" id="calculate" type="submit"><span>หาสเตตัสที่ดีที่สุด</span><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M4 10h12M11 5l5 5-5 5"/></svg></button><p class="privacy-note">คำนวณบนเครื่องคุณ · ไม่มีการส่งข้อมูลตัวละคร</p></div>
+        </form>
+      </aside>
+
+      <div class="results-panel" id="results-panel" aria-busy="true">
+        <div class="results-heading"><div><div class="eyebrow muted">YOUR NEXT BEST BUILD</div><h2>เปรียบเทียบสายคราฟต์</h2></div><span class="result-status" id="result-status" role="status" aria-live="polite" aria-atomic="true"><i aria-hidden="true"></i> กำลังคำนวณ</span></div>
+        <p class="results-caption">แต่ละการ์ดคือการจัดสรรแต้มทั้งชุดสำหรับกิจกรรมนั้น เลือกใช้ทีละชุด</p>
+        <div id="result-cards" class="result-cards"></div>
+        <div class="results-bottom"><span id="calculation-info">กำลังเตรียมตัวค้นหา…</span><span>ผลลัพธ์จากสูตรดิบ อาจเกิน 100%</span></div>
+        <div class="insight-box"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m12 3 8 9-8 9-8-9Z"/><path d="M12 7v10M8 12h8"/></svg><div><h3>แต้มเหลือ อาจเป็นคำตอบที่ดีที่สุด</h3><p>เมื่อได้คะแนนเท่ากัน ระบบเลือกชุดที่ใช้แต้มน้อยที่สุด จึงเก็บแต้มส่วนที่เพิ่มอัตราสำเร็จไม่ได้ไว้ให้คุณ</p></div></div>
+      </div>
+    </section>
+
+    <section class="method-section" id="method" aria-labelledby="method-title">
+      <div class="method-intro"><div class="eyebrow muted">BEHIND THE BUILD</div><h2 id="method-title">คิดอย่างเป็นระบบ<br><span>ให้ทุกแต้มทำงาน</span></h2><p>ตัวค้นหาแบบ Exact Dynamic Programming<br>สำหรับสูตรเชิงเส้นที่ใช้ในหน้านี้</p></div>
+      <div class="method-step"><span class="method-number">01 /</span><h3>นับต้นทุนจริง</h3><p>เพิ่มสเตตัสแต่ละขั้นด้วยตารางแต้มต้นทาง เคารพเพดาน 99 หรือ 130 และค่าขั้นต่ำที่เลือก</p></div>
+      <div class="method-step"><span class="method-number">02 /</span><h3>หาค่าสูงสุดอย่างแม่นยำ</h3><p>เก็บต้นทุนต่ำสุดของแต่ละคะแนน แล้วเลือกคะแนนสูงสุดที่อยู่ในงบ แทนการไล่ทุกชุดสเตตัส</p></div>
+      <div class="method-step"><span class="method-number">03 /</span><h3>เลือกอย่างสม่ำเสมอ</h3><p>ถ้าคะแนนเท่ากัน เลือกชุดที่ใช้แต้มน้อยกว่า แล้วใช้ลำดับการจัดสรรคงที่เพื่อให้ได้คำตอบเดิม</p></div>
+    </section>
+    <details class="assumptions"><summary>สูตรที่ใช้และข้อจำกัด <span aria-hidden="true">+</span></summary><div><p>ปรุงยา: 54 + DEX × 0.1 + LUK × 0.1 + INT × 0.05</p><p>สร้างพิษ: 20 + DEX × 0.4 + LUK × 0.2</p><p>สร้างรูน: 69.4 + DEX ÷ 30 + LUK × 0.1</p><p>ใช้ Base Stat + โบนัสในแต่ละสูตร ค่าคงที่มาจากโค้ดต้นทาง ไม่ได้คำนวณ Job Level, ชนิดไอเท็ม หรือเงื่อนไขเซิร์ฟเวอร์เพิ่มเติม ตัวเลข % คือผลลัพธ์ดิบของสูตรและอาจมากกว่า 100% ส่วนแถบภาพจำกัดไว้ที่ 0–100% เพื่อการแสดงผลเท่านั้น</p><p>Class 2 รองรับเลเวล 1–99 และ Class 3 รองรับเลเวล 99–200 ตามโปรไฟล์ต้นทาง สร้างรูนใช้กับ Class 3 เท่านั้น ส่วนสร้างพิษใน Class 2 อ้างอิง Assassin Cross ซึ่งต้องผ่านการจุติ และ Alchemist อ้างอิงตัวละครไม่จุติ ชุดคำตอบอาจมีหลายแบบที่ได้คะแนนสูงสุดเท่ากัน</p><p>อ้างอิง <a href="https://github.com/econDS/RO-help-tool/tree/1cc20f489887228eec0ff5b91e4c5fe71c75961f" target="_blank" rel="noopener noreferrer">RO-help-tool · commit 1cc20f4 ↗</a> เป็นเครื่องมือจำลองอิสระ ไม่ได้เกี่ยวข้องกับผู้ให้บริการเกม</p></div></details>
+  </main>
+  <footer class="site-footer shell"><span>STATFORGE <span class="footer-separator">/</span> A LITTLE MATH. A BETTER BUILD.</span><span>สร้างเพื่อชาว Midgard <span class="footer-sparkle" aria-hidden="true">✧</span></span></footer>
+  <noscript><div class="noscript">เครื่องคำนวณนี้ต้องใช้ JavaScript กรุณาเปิดใช้งานในเบราว์เซอร์</div></noscript>
+</body>
+</html>
