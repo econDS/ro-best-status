@@ -63,12 +63,9 @@ Tests ใช้ exhaustive oracle **เฉพาะใน tests** เทีย�
 
 ผล benchmark ตัวอย่างใน cloud Node24 (500ครั้งต่อกิจกรรม หลังwarmup; ไม่ใช่การรับประกันทุกอุปกรณ์): Rune0.305ms, Poison0.329ms, Potion0.964ms สำหรับเลเวล200/transcended/cap130
 
-## GitHub Pages
+## เปิดใช้งาน
 
-1. สร้าง repository ใหม่ เช่น `ro-best-status` แล้วpushไฟล์นี้ไปbranch `main`
-2. Repository → Settings → Pages → Source: **GitHub Actions**
-3. Workflow `Test and deploy GitHub Pages` จะรัน tests และdeployไฟล์เว็บ
-4. เปิด URL ที่แสดงใน workflow deployment หรือหน้าSettings→Pages
+[เปิด RO Best Status บน GitHub Pages](https://econds.github.io/ro-best-status/)
 
 ทุก asset ใช้ relative URL จึงรองรับ project Pages ภายใต้ `/ro-best-status/` โดยไม่ต้องเปลี่ยน base path และไม่มี build step
 
