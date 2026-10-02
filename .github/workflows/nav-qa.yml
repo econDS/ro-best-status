@@ -1,0 +1,66 @@
+name: Best Status RO Suite navigation QA
+on:
+  pull_request:
+    branches: [main]
+    types: [opened, synchronize, reopened]
+permissions:
+  contents: read
+concurrency:
+  group: best-status-nav-qa-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+jobs:
+  navigation-qa:
+    if: github.head_ref == 'feat/ro-suite-nav' && github.event.pull_request.head.repo.full_name == github.repository
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    defaults:
+      run:
+        shell: bash
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+          persist-credentials: false
+          fetch-depth: 0
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
+        with:
+          node-version: '22.14.0'
+      - name: Prepare failure-safe evidence and immutable original source
+        run: |
+          mkdir -p qa-artifacts "$RUNNER_TEMP/best-status-base"
+          printf '{"status":"not-run","sourceSHA":"%s","baselineSHA":"cb6f4aa775e1afc8efc450b6d31cd5fb73f9fd74","reason":"Inspect setup logs if Chromium did not start"}\n' "$SOURCE_SHA" > qa-artifacts/report.json
+          git rev-parse HEAD > qa-artifacts/source-commit.txt
+          git diff --name-status cb6f4aa775e1afc8efc450b6d31cd5fb73f9fd74 HEAD > qa-artifacts/changed-files.txt
+          git log --format='%H %s' cb6f4aa775e1afc8efc450b6d31cd5fb73f9fd74..HEAD > qa-artifacts/feature-commits.txt
+          sha256sum index.html styles.css app.js optimizer.js job-profiles.js job-bonus-data.js > qa-artifacts/source-sha256sums.txt
+          if test -d assets/ro-suite; then find assets/ro-suite -type f -print0 | sort -z | xargs -0 sha256sum >> qa-artifacts/source-sha256sums.txt; fi
+          cp qa/best-status-nav/*baseline.json qa/best-status-nav/browser-scenarios.json qa-artifacts/
+          git merge-base --is-ancestor cb6f4aa775e1afc8efc450b6d31cd5fb73f9fd74 HEAD
+          git archive cb6f4aa775e1afc8efc450b6d31cd5fb73f9fd74 | tar -x -C "$RUNNER_TEMP/best-status-base"
+        env:
+          SOURCE_SHA: ${{ github.event.pull_request.head.sha }}
+      - name: Original math and integration source tests
+        run: npm test 2>&1 | tee qa-artifacts/source-tests.log
+      - name: Install pinned ephemeral QA-only browser tools
+        id: browser-tools
+        if: always()
+        run: |
+          npm install --prefix "$RUNNER_TEMP/best-status-nav-qa" --no-save --package-lock=false --ignore-scripts playwright@1.55.1 2>&1 | tee qa-artifacts/browser-install.log
+          node "$RUNNER_TEMP/best-status-nav-qa/node_modules/playwright/cli.js" install --with-deps chromium 2>&1 | tee -a qa-artifacts/browser-install.log
+      - name: Compare original and candidate in real Chromium under project subpath
+        if: always() && steps.browser-tools.outcome == 'success'
+        env:
+          NODE_PATH: ${{ runner.temp }}/best-status-nav-qa/node_modules
+          QA_OUTPUT: ${{ github.workspace }}/qa-artifacts
+          SOURCE_SHA: ${{ github.event.pull_request.head.sha }}
+          BASE_SHA: cb6f4aa775e1afc8efc450b6d31cd5fb73f9fd74
+          BASE_ROOT: ${{ runner.temp }}/best-status-base
+        run: node qa/best-status-nav/browser.cjs 2>&1 | tee qa-artifacts/browser-tests.log
+      - name: Upload source-linked reports screenshots and logs even on failure
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: best-status-nav-qa-${{ github.event.pull_request.head.sha }}
+          path: qa-artifacts/
+          if-no-files-found: warn
+          retention-days: 90

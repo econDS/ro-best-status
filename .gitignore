@@ -3,3 +3,6 @@ public/
 .DS_Store
 playwright-report/
 test-results/
+
+# Transient browser QA output (selected evidence is kept under qa/).
+qa-artifacts/

@@ -1,0 +1,753 @@
+{
+  "sourceCommit": "cb6f4aa775e1afc8efc450b6d31cd5fb73f9fd74",
+  "cases": [
+    {
+      "name": "default-class3-crafts",
+      "input": {
+        "level": 99,
+        "transcended": false,
+        "base": {
+          "STR": 1,
+          "AGI": 1,
+          "VIT": 1,
+          "INT": 1,
+          "DEX": 1,
+          "LUK": 1
+        },
+        "gear": {
+          "STR": 0,
+          "AGI": 0,
+          "VIT": 0,
+          "INT": 0,
+          "DEX": 0,
+          "LUK": 0
+        },
+        "formula": {
+          "runeSkill": 10,
+          "runeJob": 70,
+          "runeStone": 4,
+          "runeRecipe": "turisus",
+          "potionPharmacy": 10,
+          "potionLearning": 10,
+          "potionInstruction": 0,
+          "potionJob": 50,
+          "potionRecipe": "red"
+        },
+        "profiles": {
+          "rune": {
+            "classId": "rune-knight",
+            "jobLevel": 70
+          },
+          "poison": {
+            "classId": "guillotine-cross",
+            "jobLevel": 70
+          },
+          "potion": {
+            "classId": "genetic",
+            "jobLevel": 50
+          }
+        },
+        "mode": "current",
+        "budgetOverride": null
+      },
+      "expected": {
+        "rune": {
+          "profile": {
+            "classId": "rune-knight",
+            "cap": 130,
+            "budget": 1273,
+            "transcended": false,
+            "jobBonuses": {
+              "STR": 6,
+              "AGI": 6,
+              "VIT": 7,
+              "INT": 10,
+              "DEX": 9,
+              "LUK": 5
+            },
+            "bonusCaution": false
+          },
+          "combinedBonuses": {
+            "STR": 6,
+            "AGI": 6,
+            "VIT": 7,
+            "INT": 10,
+            "DEX": 9,
+            "LUK": 5
+          },
+          "current": {
+            "min": 56.93333333333333,
+            "max": 56.93333333333333
+          },
+          "result": {
+            "stats": {
+              "STR": 1,
+              "AGI": 1,
+              "VIT": 1,
+              "INT": 1,
+              "DEX": 69,
+              "LUK": 115
+            },
+            "spent": 1273,
+            "remaining": 0,
+            "rate": 70.6,
+            "rateMax": 70.6,
+            "score": 410,
+            "operations": 13686
+          }
+        },
+        "poison": {
+          "profile": {
+            "classId": "guillotine-cross",
+            "cap": 130,
+            "budget": 1273,
+            "transcended": false,
+            "jobBonuses": {
+              "STR": 8,
+              "AGI": 11,
+              "VIT": 6,
+              "INT": 5,
+              "DEX": 9,
+              "LUK": 4
+            },
+            "bonusCaution": true
+          },
+          "combinedBonuses": {
+            "STR": 8,
+            "AGI": 11,
+            "VIT": 6,
+            "INT": 5,
+            "DEX": 9,
+            "LUK": 4
+          },
+          "current": {
+            "min": 25,
+            "max": 25
+          },
+          "result": {
+            "stats": {
+              "STR": 1,
+              "AGI": 1,
+              "VIT": 1,
+              "INT": 1,
+              "DEX": 106,
+              "LUK": 90
+            },
+            "spent": 1269,
+            "remaining": 4,
+            "rate": 84.8,
+            "rateMax": 84.8,
+            "score": 299,
+            "operations": 13686
+          }
+        },
+        "potion": {
+          "profile": {
+            "classId": "genetic",
+            "cap": 130,
+            "budget": 1273,
+            "transcended": false,
+            "jobBonuses": {
+              "STR": 1,
+              "AGI": 5,
+              "VIT": 4,
+              "INT": 11,
+              "DEX": 6,
+              "LUK": 1
+            },
+            "bonusCaution": false
+          },
+          "combinedBonuses": {
+            "STR": 1,
+            "AGI": 5,
+            "VIT": 4,
+            "INT": 11,
+            "DEX": 6,
+            "LUK": 1
+          },
+          "current": {
+            "min": 66.5,
+            "max": 76.5
+          },
+          "result": {
+            "stats": {
+              "STR": 1,
+              "AGI": 1,
+              "VIT": 1,
+              "INT": 42,
+              "DEX": 91,
+              "LUK": 95
+            },
+            "spent": 1270,
+            "remaining": 3,
+            "rate": 86.95,
+            "rateMax": 96.95,
+            "score": 409,
+            "operations": 33636
+          }
+        }
+      }
+    },
+    {
+      "name": "custom-equipment-class2-current",
+      "input": {
+        "level": 99,
+        "transcended": false,
+        "base": {
+          "STR": 5,
+          "AGI": 2,
+          "VIT": 7,
+          "INT": 20,
+          "DEX": 40,
+          "LUK": 35
+        },
+        "gear": {
+          "STR": 0,
+          "AGI": 0,
+          "VIT": 0,
+          "INT": 3.5,
+          "DEX": 12,
+          "LUK": 7
+        },
+        "formula": {
+          "runeSkill": 10,
+          "runeJob": 70,
+          "runeStone": 60,
+          "runeRecipe": "verkana",
+          "potionPharmacy": 10,
+          "potionLearning": 10,
+          "potionInstruction": 5,
+          "potionJob": 50,
+          "potionRecipe": "condensed-white"
+        },
+        "profiles": {
+          "rune": {
+            "classId": "rune-knight",
+            "jobLevel": 45
+          },
+          "poison": {
+            "classId": "assassin-cross",
+            "jobLevel": 70
+          },
+          "potion": {
+            "classId": "creator",
+            "jobLevel": 70
+          }
+        },
+        "mode": "current",
+        "budgetOverride": 1000
+      },
+      "expected": {
+        "rune": {
+          "profile": {
+            "classId": "rune-knight",
+            "cap": 130,
+            "budget": 1000,
+            "transcended": false,
+            "jobBonuses": {
+              "STR": 3,
+              "AGI": 3,
+              "VIT": 5,
+              "INT": 8,
+              "DEX": 7,
+              "LUK": 0
+            },
+            "bonusCaution": false
+          },
+          "combinedBonuses": {
+            "STR": 3,
+            "AGI": 3,
+            "VIT": 5,
+            "INT": 11.5,
+            "DEX": 19,
+            "LUK": 7
+          },
+          "current": {
+            "min": 100.66666666666667,
+            "max": 100.66666666666667
+          },
+          "result": {
+            "stats": {
+              "STR": 5,
+              "AGI": 2,
+              "VIT": 7,
+              "INT": 20,
+              "DEX": 52,
+              "LUK": 105
+            },
+            "spent": 995,
+            "remaining": 5,
+            "rate": 108.06666666666666,
+            "rateMax": 108.06666666666666,
+            "score": 222,
+            "operations": 3824
+          }
+        },
+        "poison": {
+          "profile": {
+            "classId": "assassin-cross",
+            "cap": 99,
+            "budget": 1000,
+            "transcended": true,
+            "jobBonuses": {
+              "STR": 9,
+              "AGI": 15,
+              "VIT": 3,
+              "INT": 0,
+              "DEX": 10,
+              "LUK": 8
+            },
+            "bonusCaution": false
+          },
+          "combinedBonuses": {
+            "STR": 9,
+            "AGI": 15,
+            "VIT": 3,
+            "INT": 3.5,
+            "DEX": 22,
+            "LUK": 15
+          },
+          "current": {
+            "min": 54.8,
+            "max": 54.8
+          },
+          "result": {
+            "stats": {
+              "STR": 5,
+              "AGI": 2,
+              "VIT": 7,
+              "INT": 20,
+              "DEX": 99,
+              "LUK": 65
+            },
+            "spent": 999,
+            "remaining": 1,
+            "rate": 84.4,
+            "rateMax": 84.4,
+            "score": 148,
+            "operations": 3456
+          }
+        },
+        "potion": {
+          "profile": {
+            "classId": "creator",
+            "cap": 99,
+            "budget": 1000,
+            "transcended": true,
+            "jobBonuses": {
+              "STR": 4,
+              "AGI": 6,
+              "VIT": 3,
+              "INT": 7,
+              "DEX": 14,
+              "LUK": 11
+            },
+            "bonusCaution": false
+          },
+          "combinedBonuses": {
+            "STR": 4,
+            "AGI": 6,
+            "VIT": 3,
+            "INT": 10.5,
+            "DEX": 26,
+            "LUK": 18
+          },
+          "current": {
+            "min": 57.425,
+            "max": 67.425
+          },
+          "result": {
+            "stats": {
+              "STR": 5,
+              "AGI": 2,
+              "VIT": 7,
+              "INT": 32,
+              "DEX": 81,
+              "LUK": 81
+            },
+            "spent": 997,
+            "remaining": 3,
+            "rate": 66.725,
+            "rateMax": 76.725,
+            "score": 186,
+            "operations": 8739
+          }
+        }
+      }
+    },
+    {
+      "name": "reset-alchemist-custom-budget",
+      "input": {
+        "level": 99,
+        "transcended": false,
+        "base": {
+          "STR": 7,
+          "AGI": 3,
+          "VIT": 2,
+          "INT": 20,
+          "DEX": 30,
+          "LUK": 40
+        },
+        "gear": {
+          "STR": 0,
+          "AGI": 0,
+          "VIT": 0,
+          "INT": 9,
+          "DEX": 2,
+          "LUK": 0
+        },
+        "formula": {
+          "runeSkill": 10,
+          "runeJob": 70,
+          "runeStone": 4,
+          "runeRecipe": "turisus",
+          "potionPharmacy": 10,
+          "potionLearning": 10,
+          "potionInstruction": 0,
+          "potionJob": 50,
+          "potionRecipe": "red"
+        },
+        "profiles": {
+          "rune": {
+            "classId": "rune-knight",
+            "jobLevel": 1
+          },
+          "poison": {
+            "classId": "assassin-cross",
+            "jobLevel": 3
+          },
+          "potion": {
+            "classId": "alchemist",
+            "jobLevel": 50
+          }
+        },
+        "mode": "reset",
+        "budgetOverride": 500
+      },
+      "expected": {
+        "rune": {
+          "profile": {
+            "classId": "rune-knight",
+            "cap": 130,
+            "budget": 500,
+            "transcended": false,
+            "jobBonuses": {
+              "STR": 0,
+              "AGI": 0,
+              "VIT": 0,
+              "INT": 1,
+              "DEX": 0,
+              "LUK": 0
+            },
+            "bonusCaution": false
+          },
+          "combinedBonuses": {
+            "STR": 0,
+            "AGI": 0,
+            "VIT": 0,
+            "INT": 10,
+            "DEX": 2,
+            "LUK": 0
+          },
+          "current": {
+            "min": 54.16666666666667,
+            "max": 54.16666666666667
+          },
+          "result": {
+            "stats": {
+              "STR": 1,
+              "AGI": 1,
+              "VIT": 1,
+              "INT": 1,
+              "DEX": 21,
+              "LUK": 82
+            },
+            "spent": 500,
+            "remaining": 0,
+            "rate": 58.06666666666667,
+            "rateMax": 58.06666666666667,
+            "score": 263,
+            "operations": 5627
+          }
+        },
+        "poison": {
+          "profile": {
+            "classId": "assassin-cross",
+            "cap": 99,
+            "budget": 500,
+            "transcended": true,
+            "jobBonuses": {
+              "STR": 1,
+              "AGI": 1,
+              "VIT": 0,
+              "INT": 0,
+              "DEX": 0,
+              "LUK": 1
+            },
+            "bonusCaution": false
+          },
+          "combinedBonuses": {
+            "STR": 1,
+            "AGI": 1,
+            "VIT": 0,
+            "INT": 9,
+            "DEX": 2,
+            "LUK": 1
+          },
+          "current": {
+            "min": 41,
+            "max": 41
+          },
+          "result": {
+            "stats": {
+              "STR": 1,
+              "AGI": 1,
+              "VIT": 1,
+              "INT": 1,
+              "DEX": 77,
+              "LUK": 32
+            },
+            "spent": 499,
+            "remaining": 1,
+            "rate": 58.2,
+            "rateMax": 58.2,
+            "score": 183,
+            "operations": 5627
+          }
+        },
+        "potion": {
+          "profile": {
+            "classId": "alchemist",
+            "cap": 99,
+            "budget": 500,
+            "transcended": false,
+            "jobBonuses": {
+              "STR": 5,
+              "AGI": 6,
+              "VIT": 3,
+              "INT": 7,
+              "DEX": 9,
+              "LUK": 0
+            },
+            "bonusCaution": false
+          },
+          "combinedBonuses": {
+            "STR": 5,
+            "AGI": 6,
+            "VIT": 3,
+            "INT": 16,
+            "DEX": 11,
+            "LUK": 0
+          },
+          "current": {
+            "min": 74.9,
+            "max": 84.9
+          },
+          "result": {
+            "stats": {
+              "STR": 1,
+              "AGI": 1,
+              "VIT": 1,
+              "INT": 21,
+              "DEX": 51,
+              "LUK": 58
+            },
+            "spent": 499,
+            "remaining": 1,
+            "rate": 78.85,
+            "rateMax": 88.85,
+            "score": 234,
+            "operations": 12854
+          }
+        }
+      }
+    },
+    {
+      "name": "high-level-class3-supplemental-job-bonus",
+      "input": {
+        "level": 200,
+        "transcended": true,
+        "base": {
+          "STR": 1,
+          "AGI": 1,
+          "VIT": 1,
+          "INT": 1,
+          "DEX": 1,
+          "LUK": 1
+        },
+        "gear": {
+          "STR": 0,
+          "AGI": 0,
+          "VIT": 0,
+          "INT": 0,
+          "DEX": 20,
+          "LUK": 10
+        },
+        "formula": {
+          "runeSkill": 10,
+          "runeJob": 70,
+          "runeStone": 4,
+          "runeRecipe": "turisus",
+          "potionPharmacy": 10,
+          "potionLearning": 10,
+          "potionInstruction": 0,
+          "potionJob": 50,
+          "potionRecipe": "red"
+        },
+        "profiles": {
+          "rune": {
+            "classId": "rune-knight",
+            "jobLevel": 70
+          },
+          "poison": {
+            "classId": "guillotine-cross",
+            "jobLevel": 70
+          },
+          "potion": {
+            "classId": "genetic",
+            "jobLevel": 70
+          }
+        },
+        "mode": "current",
+        "budgetOverride": null
+      },
+      "expected": {
+        "rune": {
+          "profile": {
+            "classId": "rune-knight",
+            "cap": 130,
+            "budget": 4151,
+            "transcended": true,
+            "jobBonuses": {
+              "STR": 6,
+              "AGI": 6,
+              "VIT": 7,
+              "INT": 10,
+              "DEX": 9,
+              "LUK": 5
+            },
+            "bonusCaution": false
+          },
+          "combinedBonuses": {
+            "STR": 6,
+            "AGI": 6,
+            "VIT": 7,
+            "INT": 10,
+            "DEX": 29,
+            "LUK": 15
+          },
+          "current": {
+            "min": 58.6,
+            "max": 58.6
+          },
+          "result": {
+            "stats": {
+              "STR": 1,
+              "AGI": 1,
+              "VIT": 1,
+              "INT": 1,
+              "DEX": 130,
+              "LUK": 130
+            },
+            "spent": 2838,
+            "remaining": 1313,
+            "rate": 75.8,
+            "rateMax": 75.8,
+            "score": 516,
+            "operations": 17030
+          }
+        },
+        "poison": {
+          "profile": {
+            "classId": "guillotine-cross",
+            "cap": 130,
+            "budget": 4151,
+            "transcended": true,
+            "jobBonuses": {
+              "STR": 8,
+              "AGI": 11,
+              "VIT": 6,
+              "INT": 5,
+              "DEX": 9,
+              "LUK": 4
+            },
+            "bonusCaution": true
+          },
+          "combinedBonuses": {
+            "STR": 8,
+            "AGI": 11,
+            "VIT": 6,
+            "INT": 5,
+            "DEX": 29,
+            "LUK": 14
+          },
+          "current": {
+            "min": 35,
+            "max": 35
+          },
+          "result": {
+            "stats": {
+              "STR": 1,
+              "AGI": 1,
+              "VIT": 1,
+              "INT": 1,
+              "DEX": 130,
+              "LUK": 130
+            },
+            "spent": 2838,
+            "remaining": 1313,
+            "rate": 112.4,
+            "rateMax": 112.4,
+            "score": 387,
+            "operations": 17030
+          }
+        },
+        "potion": {
+          "profile": {
+            "classId": "genetic",
+            "cap": 130,
+            "budget": 4151,
+            "transcended": true,
+            "jobBonuses": {
+              "STR": 5,
+              "AGI": 6,
+              "VIT": 8,
+              "INT": 12,
+              "DEX": 8,
+              "LUK": 4
+            },
+            "bonusCaution": true
+          },
+          "combinedBonuses": {
+            "STR": 5,
+            "AGI": 6,
+            "VIT": 8,
+            "INT": 12,
+            "DEX": 28,
+            "LUK": 14
+          },
+          "current": {
+            "min": 74.05,
+            "max": 84.05
+          },
+          "result": {
+            "stats": {
+              "STR": 1,
+              "AGI": 1,
+              "VIT": 1,
+              "INT": 127,
+              "DEX": 130,
+              "LUK": 130
+            },
+            "spent": 4149,
+            "remaining": 2,
+            "rate": 106.15,
+            "rateMax": 116.15,
+            "score": 642,
+            "operations": 50697
+          }
+        }
+      }
+    }
+  ]
+}
