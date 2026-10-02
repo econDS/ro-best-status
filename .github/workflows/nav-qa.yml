@@ -10,7 +10,7 @@ concurrency:
   cancel-in-progress: true
 jobs:
   navigation-qa:
-    if: github.head_ref == 'feat/ro-suite-nav' && github.event.pull_request.head.repo.full_name == github.repository
+    if: (github.head_ref == 'feat/ro-suite-nav' || github.head_ref == 'chore/best-status-brand-consistency') && github.event.pull_request.head.repo.full_name == github.repository
     runs-on: ubuntu-24.04
     timeout-minutes: 30
     defaults:

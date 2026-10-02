@@ -18,7 +18,9 @@ test('original calculator, styles, data, tests, package and source limitations s
   for(const [path,expected] of Object.entries(baseline.files)){
     if(path!=='index.html')assert.equal(hash(read(path)),expected,path);
   }
-  const original=html.replace('  <!-- RO suite navigation styles: isolated to the host and its fallback. -->\n  <link rel="stylesheet" href="./assets/ro-suite/integration.css">\n','')
+  let unbranded=html;
+  for(const [before,after] of json('qa/brand-consistency/copy-changes.json').replacements){assert.equal(unbranded.split(after).length-1,1,'exact approved branding copy: '+after);unbranded=unbranded.replace(after,before);}
+  const original=unbranded.replace('  <!-- RO suite navigation styles: isolated to the host and its fallback. -->\n  <link rel="stylesheet" href="./assets/ro-suite/integration.css">\n','')
     .replace(/  <!-- RO suite navigation: calculator remains independent if the module fails\. -->\n[\s\S]*?  <!-- End RO suite navigation\. -->\n/,'');
   assert.equal(hash(original),baseline.files['index.html'],'all original HTML remains in its original order');
 });
@@ -70,4 +72,13 @@ test('vendored release bytes and current identity match the recorded source prov
   const bundle=read(release+'nav.js').toString();
   assert.doesNotMatch(bundle,/localStorage|sessionStorage|eval\(|new Function\(/);
   assert.match(bundle,/aria-current/);assert.match(bundle,/best-status/);
+});
+
+test('Best Status branding is consistent while technical identity stays fixed',()=>{
+  assert.match(html, /<title>Best Status · STAT FORGE — Ragnarok Online Stat Planner<\/title>/);
+  assert.match(html, /aria-label="Best Status — STAT FORGE หน้าหลัก"/);
+  assert.match(html, /<h1 id="hero-title">Best <span>Status<\/span><\/h1>/);
+  assert.match(html, /STAT FORGE · RAGNAROK ONLINE STAT PLANNER/);
+  assert.match(read('README.md').toString(), /^# Best Status — STAT FORGE/);
+  assert.match(html, /จัดสเตตัส Ragnarok Online สำหรับ Rune, Poison และ Potion/);
 });

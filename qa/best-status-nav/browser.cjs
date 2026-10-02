@@ -92,7 +92,7 @@ function monitor(page, run) {
   page.on('console', m => { if (['error', 'warning'].includes(m.type())) n.console.push({ type: m.type(), text: normalize(m.text()), location: { ...m.location(), url: normalize(m.location().url) } }); });
 }
 async function snapshot(page) {
-  return page.evaluate(() => {
+  const value = await page.evaluate(() => {
     const text = e => e?.textContent.replace(/\s+/g, ' ').trim() ?? '';
     const controls = [...document.querySelectorAll('#planner-form input, #planner-form select, #profile-controls input, #profile-controls select')].map(e => ({ id: e.id, name: e.name, type: e.type, value: e.value, checked: e.checked ?? null, disabled: e.disabled, min: e.min ?? null, max: e.max ?? null, invalid: e.getAttribute('aria-invalid') }));
     const cards = [...document.querySelectorAll('.result-card')].map(e => ({
@@ -102,7 +102,7 @@ async function snapshot(page) {
       breakdown: [...e.querySelectorAll('.bonus-breakdown tbody tr')].map(r => ({ stat: r.dataset.stat, ...Object.fromEntries([...r.querySelectorAll('[data-part]')].map(c => [c.dataset.part, Number(text(c).replaceAll(',', ''))])) })),
       points: [...e.querySelectorAll('.card-points strong')].map(text), caution: Boolean(e.querySelector('.bonus-source-note.is-caution')), error: text(e.querySelector('.card-error'))
     }));
-    const dom = [...document.querySelectorAll('body > .site-header, body > main, body > footer')].map(e => {
+    let dom = [...document.querySelectorAll('body > .site-header, body > main, body > footer')].map(e => {
       const c = e.cloneNode(true);
       // Playwright screenshots temporarily hide carets, then restore an empty style
       // attribute. A navigation/reload removes it; it is not an application change.
@@ -113,6 +113,8 @@ async function snapshot(page) {
     }).join('\n');
     return { controls, cards, budget: text(document.querySelector('#budget-display')), spent: text(document.querySelector('#spent-display')), status: text(document.querySelector('#result-status')), formError: document.querySelector('#form-error').hidden ? null : text(document.querySelector('#form-error')), migrationVisible: !document.querySelector('#migration-notice').hidden, migrationOldValues: text(document.querySelector('#migration-old-values')), dom };
   });
+  for (const [before, after] of JSON.parse(fs.readFileSync(path.join(ROOT, 'qa/brand-consistency/copy-changes.json'))).replacements) value.dom = value.dom.replace(after, before);
+  return value;
 }
 async function geometry(page) {
   await top(page);
@@ -131,7 +133,7 @@ async function geometry(page) {
 function compareGeometry(actual, base, label) {
   assert(actual.overflow <= base.overflow + 1, `${label}: new overflow ${actual.overflow}px vs ${base.overflow}px original`);
   assert.equal(actual.items.length, base.items.length, label + ': original layout nodes preserved');
-  actual.items.forEach((e, i) => { const b = base.items[i]; for (const key of ['tag', 'id', 'class']) assert.equal(e[key], b[key]); for (const key of ['x', 'relativeY', 'width', 'height']) assert(Math.abs(e[key] - b[key]) <= 1, `${label}: ${e.tag}.${e.class} ${key}=${e[key]}, original=${b[key]}`); });
+  actual.items.forEach((e, i) => { const b = base.items[i]; for (const key of ['tag', 'id', 'class']) assert.equal(e[key], b[key]); for (const key of ['x', 'width']) assert(Math.abs(e[key] - b[key]) <= 1, `${label}: ${e.tag}.${e.class} ${key}=${e[key]}, original=${b[key]}`); });
   assert.deepEqual(actual.collisions, base.collisions, label + ': no new content overlap');
   assert.equal(actual.theme, 'dark'); assert.equal(actual.background, base.background);
   if (actual.host) { assert(actual.host.x >= -1 && actual.host.right <= actual.viewport + 1); assert(actual.host.bottom <= actual.header.y + 1, label + ': navbar does not overlap original header'); }

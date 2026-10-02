@@ -1,6 +1,6 @@
-# RO Best Status
+# Best Status — STAT FORGE
 
-เว็บภาษาไทยสำหรับหา Status ที่ดีที่สุดในการ **สร้าง Rune**, **ทำยาแอส (Poison)** และ **ปรุงยา (Potion)** ตามสูตรที่เผยแพร่บน **iRO Wiki** โดยใช้ต้นทุน/งบ Status จาก [econDS/RO-help-tool](https://github.com/econDS/RO-help-tool/tree/1cc20f489887228eec0ff5b91e4c5fe71c75961f)
+เครื่องมือจัดสเตตัสภาษาไทยสำหรับ Rune / Poison / Potion และหา Status ที่ดีที่สุดในการ **สร้าง Rune**, **ทำยาแอส (Poison)** และ **ปรุงยา (Potion)** ตามสูตรที่เผยแพร่บน **iRO Wiki** โดยใช้ต้นทุน/งบ Status จาก [econDS/RO-help-tool](https://github.com/econDS/RO-help-tool/tree/1cc20f489887228eec0ff5b91e4c5fe71c75961f)
 
 - Static HTML/CSS/JavaScript, ไม่มี backend หรือ runtime dependency
 - รันใน browser และ deploy บน GitHub Pages ได้
