@@ -1,0 +1,61 @@
+{
+  "baseCommit": "21131807125d4318c37e50c0a4efcfec2c1c8970",
+  "initialGitStatus": "clean",
+  "surfaces": [
+    {
+      "path": ".github/workflows/nav-qa.yml",
+      "sha256": "04b0d5f553215b403e1667af561b82a49eb96410c6663f03d1bcd8340ce0e1c3",
+      "surface": "source/documentation"
+    },
+    {
+      "path": "README.md",
+      "sha256": "bc6d10ee777d47481288ae16368a30f1dcdff1b8fadfb26007a36566b4d1d560",
+      "surface": "source/documentation"
+    },
+    {
+      "path": "assets/ro-suite/1.3.0/catalog.snapshot.json",
+      "sha256": "a198338ddcb7857094ef950fb1315c532840cf53ac8e7a69b331d8cb4a87dd5d",
+      "surface": "immutable-release"
+    },
+    {
+      "path": "assets/ro-suite/1.3.0/nav.js",
+      "sha256": "e0a75bce3f8ba21d73aff8aa28af1c624d977f1e8e3de483c6dd40785b3b84d2",
+      "surface": "immutable-release"
+    },
+    {
+      "path": "assets/ro-suite/integration.css",
+      "sha256": "7d555484af9b0b1852d57ac486f56ffa1395c6a84947e50eab439dd11bd39995",
+      "surface": "source/documentation"
+    },
+    {
+      "path": "index.html",
+      "sha256": "e34724625190725ab2e49b4cef0619ac3cf95df8eaa16be26e82a7a6969b826c",
+      "surface": "source/documentation"
+    },
+    {
+      "path": "package.json",
+      "sha256": "6468b8699d5c9ddf528c051ffa8cb5e2475b7a4b3ac1bd8cbe1bf51d4cdb697c",
+      "surface": "source/documentation"
+    },
+    {
+      "path": "qa/best-status-nav/README.md",
+      "sha256": "91ff09ae37f30632e8fb9c22730e564f630dadf63052d355c5bb32cbea743482",
+      "surface": "source/documentation"
+    },
+    {
+      "path": "qa/best-status-nav/browser.cjs",
+      "sha256": "1064921d6ed5e8f7b37ce453305e9bb1c2c88233b4e1a6a04f807b97c6e37b84",
+      "surface": "source/documentation"
+    },
+    {
+      "path": "qa/best-status-nav/source-baseline.json",
+      "sha256": "2071c74c3e49470af931789b4a514378113922e49915cd42fe820267d22273b5",
+      "surface": "source/documentation"
+    },
+    {
+      "path": "tests/navigation.test.js",
+      "sha256": "c7658c684c9fe1cd406b7b591c537c2fef2e5cce116ed27a0bd96bd14384b004",
+      "surface": "source/documentation"
+    }
+  ]
+}

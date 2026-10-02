@@ -1,0 +1,33 @@
+{
+  "baseCommit": "21131807125d4318c37e50c0a4efcfec2c1c8970",
+  "replacements": [
+    [
+      "วางแผนสเตตัส Ragnarok Online สำหรับปรุงยา สร้างพิษ และสร้างรูน ด้วยตัวค้นหาค่าที่ดีที่สุดแบบ Dynamic Programming",
+      "จัดสเตตัส Ragnarok Online สำหรับ Rune, Poison และ Potion พร้อมค้นหาการจัดแต้มที่เหมาะที่สุดตามงบ"
+    ],
+    [
+      "<title>STAT FORGE · RO Stat Planner</title>",
+      "<title>Best Status · STAT FORGE — Ragnarok Online Stat Planner</title>"
+    ],
+    [
+      "aria-label=\"STAT FORGE หน้าหลัก\"",
+      "aria-label=\"Best Status — STAT FORGE หน้าหลัก\""
+    ],
+    [
+      "<span>STAT<span class=\"brand-thin\">FORGE</span><small>RAGNAROK ONLINE · STAT PLANNER</small></span>",
+      "<span>BEST<span class=\"brand-thin\"> STATUS</span><small>STAT FORGE · RAGNAROK ONLINE STAT PLANNER</small></span>"
+    ],
+    [
+      "<h1 id=\"hero-title\">ทุกแต้ม <span>มีความหมาย</span></h1>",
+      "<h1 id=\"hero-title\">Best <span>Status</span></h1>"
+    ],
+    [
+      "หาสเตตัสที่คุ้มที่สุดสำหรับสายคราฟต์ของคุณ<br class=\"desktop-break\"> เปรียบเทียบปรุงยา สร้างพิษ และสร้างรูนในที่เดียว",
+      "จัดแต้ม DEX / LUK / INT ให้เหมาะกับงานคราฟต์และแต้มที่มี<br class=\"desktop-break\"> เลือกสร้าง Rune, Poison หรือ Potion"
+    ],
+    [
+      "<i aria-hidden=\"true\"></i> ค้นหาค่าที่ดีที่สุดแบบ Exact DP",
+      "<i aria-hidden=\"true\"></i> Exact Dynamic Programming"
+    ]
+  ]
+}
