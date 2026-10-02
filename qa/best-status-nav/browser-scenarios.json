@@ -1,0 +1,193 @@
+{
+  "schemaVersion": 1,
+  "baselineSHA": "cb6f4aa775e1afc8efc450b6d31cd5fb73f9fd74",
+  "frozenFrom": "Original app.js, optimizer.js, job-profiles.js, index.html and styles.css before navbar integration",
+  "widths": [
+    360,
+    390,
+    768,
+    1440
+  ],
+  "systemColorSchemes": [
+    "light",
+    "dark"
+  ],
+  "actualTheme": "dark",
+  "storageKey": "statforge-planner-v2",
+  "legacyStorageKey": "statforge-planner-v1",
+  "features": {
+    "present": [
+      "Three crafting cards",
+      "Six class profiles with current-class-only job bonuses",
+      "Shared equipment/buff stats",
+      "Custom budget",
+      "Current minima and reset allocation",
+      "All 10 rune and 17 potion recipes",
+      "v2 settings reload",
+      "v1 migration and acknowledgement"
+    ],
+    "absent": [
+      "Theme toggle",
+      "Share URL",
+      "Import or export"
+    ]
+  },
+  "scenarios": [
+    {
+      "id": "defaults-three-crafts",
+      "fields": {},
+      "expectedRates": [
+        "70.60%",
+        "84.80%",
+        "86.95–96.95%"
+      ]
+    },
+    {
+      "id": "current-minima-shared-gear-transcended-classes",
+      "fields": {
+        "level": 99,
+        "transcended": false,
+        "custom-budget-enabled": true,
+        "custom-budget": 1600,
+        "base-STR": 25,
+        "base-AGI": 12,
+        "base-VIT": 15,
+        "base-INT": 20,
+        "base-DEX": 45,
+        "base-LUK": 40,
+        "bonus-STR": 2,
+        "bonus-AGI": 3,
+        "bonus-VIT": 4,
+        "bonus-INT": 12.5,
+        "bonus-DEX": 18,
+        "bonus-LUK": 22,
+        "class-poison": "assassin-cross",
+        "job-poison": 70,
+        "class-potion": "creator",
+        "job-potion": 70,
+        "job-rune": 70,
+        "rune-recipe": "verkana",
+        "rune-stone": "30",
+        "potion-recipe": "condensed-white",
+        "potion-instruction": 5
+      }
+    },
+    {
+      "id": "alchemist-forced-normal-budget",
+      "fields": {
+        "level": 99,
+        "transcended": true,
+        "class-poison": "assassin-cross",
+        "job-poison": 2,
+        "class-potion": "alchemist",
+        "job-potion": 50,
+        "bonus-INT": 5,
+        "bonus-DEX": 10,
+        "bonus-LUK": 15,
+        "rune-recipe": "asir",
+        "rune-stone": "15",
+        "potion-recipe": "alcohol"
+      }
+    },
+    {
+      "id": "high-level-third-classes-recipe-range",
+      "fields": {
+        "level": 175,
+        "transcended": true,
+        "base-STR": 30,
+        "base-VIT": 40,
+        "base-INT": 50,
+        "base-DEX": 80,
+        "base-LUK": 90,
+        "bonus-INT": 20,
+        "bonus-DEX": 25,
+        "bonus-LUK": 30,
+        "class-poison": "guillotine-cross",
+        "job-poison": 70,
+        "class-potion": "genetic",
+        "job-potion": 70,
+        "job-rune": 70,
+        "rune-recipe": "lux-anima",
+        "rune-stone": "60",
+        "potion-recipe": "glistening-coat",
+        "potion-instruction": 5
+      }
+    },
+    {
+      "id": "zero-custom-budget",
+      "fields": {
+        "custom-budget-enabled": true,
+        "custom-budget": 0,
+        "job-rune": 1,
+        "job-poison": 1,
+        "job-potion": 1
+      }
+    }
+  ],
+  "runeRecipes": [
+    "turisus",
+    "isia",
+    "pertz",
+    "hagalas",
+    "asir",
+    "urj",
+    "rhydo",
+    "nosiege",
+    "verkana",
+    "lux-anima"
+  ],
+  "potionRecipes": [
+    "red",
+    "yellow",
+    "white",
+    "alcohol",
+    "acid",
+    "marine-sphere",
+    "bottle-grenade",
+    "plant",
+    "blue",
+    "anodyne",
+    "aloevera",
+    "embryo",
+    "elemental",
+    "condensed-red",
+    "condensed-yellow",
+    "condensed-white",
+    "glistening-coat"
+  ],
+  "legacy": {
+    "level": 99,
+    "transcended": true,
+    "custom": true,
+    "budget": 1500,
+    "mode": "current",
+    "cap": 99,
+    "base": {
+      "STR": 8,
+      "AGI": 9,
+      "VIT": 10,
+      "INT": 20,
+      "DEX": 35,
+      "LUK": 45
+    },
+    "bonuses": {
+      "STR": 1,
+      "AGI": 2,
+      "VIT": 3,
+      "INT": 11,
+      "DEX": 17,
+      "LUK": 23
+    },
+    "formula": {
+      "runeSkill": 10,
+      "runeJob": 55,
+      "runeStone": 30,
+      "runeRecipe": "urj",
+      "potionPharmacy": 9,
+      "potionLearning": 8,
+      "potionInstruction": 3,
+      "potionJob": 60,
+      "potionRecipe": "blue"
+    }
+  }
+}

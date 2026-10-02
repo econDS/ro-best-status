@@ -89,3 +89,18 @@ Tests ใช้ exhaustive oracle **เฉพาะใน tests** เทีย�
 ทุก asset ใช้ relative URL จึงรองรับ project Pages ภายใต้ `/ro-best-status/` โดยไม่ต้องเปลี่ยน base path และไม่มี build step
 
 การตรวจ parity: ต้นทุนครบ130ค่าและงบเลเวลครบ400ค่า (200เลเวล×2โหมด) ตรงกับsnapshot RO-help-tool สูตรRune/PotionถูกปรับแยกตามiRO Wikiแล้ว จึงไม่คาดหวังอัตราสำเร็จเท่ากับค่าคงที่เดิม ตัวคูณStatusไม่เปลี่ยนจึงยังใช้score-indexed DPเดิมได้ และrecipeช่วงต่ำ/สูงให้ชุดStatusเหมาะที่สุดชุดเดียวกัน
+
+## เมนู RO Tools
+
+เพิ่มเมนูสลับเครื่องมือก่อน header เดิม โดยใช้ local bundle `ro-suite-nav 1.3.0` จาก [RO Tools Portal](https://github.com/econDS/ro_tools_portal) และระบุตัวตน `best-status` (Best Status, ไอคอน gem, สี `#7047a8`)
+
+- ธีมเมนูเป็น `dark` ตามธีมคงที่ของเว็บ ไม่เพิ่มตัวเลือกธีมหรือ storage key
+- ลิงก์ “กลับ RO Tools Portal” ยังใช้ได้เมื่อโหลด `nav.js` ไม่สำเร็จ และเครื่องคำนวณไม่ขึ้นกับเมนู
+- ไม่โหลดโค้ดหรือ catalog จากเซิร์ฟเวอร์ภายนอกขณะใช้งาน ใช้ snapshot ที่ตรวจพร้อม bundle
+- ไฟล์ทั้งหมดอยู่ใน `assets/ro-suite/1.3.0/`; `nav.lock.json` บันทึก source commit และ SHA-256 ส่วน provenance และ regression fixtures อยู่ใน `qa/best-status-nav/`
+- รุ่น 1.2.0 เดิมไม่ถูกเปลี่ยน แอปอื่นที่ยัง pin รุ่นเดิมยังไม่มี Best Status ในรายการ จนกว่าจะอนุมัติอัปเกรดแอปนั้นแยกต่างหาก
+- Portal PR เพิ่มรายการ Best Status และเตรียม bundle 1.3.0 ภายใต้การ review; ควร review/merge Portal ก่อน PR นี้ ทั้งสองฝั่งไม่อัปเกรดแอปอื่นโดยอัตโนมัติ
+
+การย้อนกลับทำได้โดยย้อนเฉพาะ integration ของเมนู ไม่ต้องแก้สูตร สเตตัส ข้อมูล Job Bonus หรือค่าที่บันทึกไว้
+
+`npm test` ครอบคลุม tests เดิม 16 กลุ่ม พร้อมตรวจ source byte invariants, baseline การคำนวณ 4 สถานการณ์ × 3 กิจกรรม, manifest/hashes และ publishing assets; browser regression และภาพหน้าจออยู่ใน artifact ของ workflow **Best Status RO Suite navigation QA** ของ commit ที่ต้องการตรวจ

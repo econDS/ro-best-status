@@ -1,0 +1,28 @@
+/* Host spacing and usable light-DOM fallback only; original app CSS is unchanged. */
+ro-suite-nav.best-status-suite-nav {
+  display: block;
+  padding-top: 12px;
+}
+ro-suite-nav.best-status-suite-nav > nav {
+  border: 1px solid #2f3f35;
+  border-bottom: 3px solid #7047a8;
+  border-radius: 8px;
+  padding: 8px;
+  background: #16211b;
+  color: #ecf2e8;
+}
+ro-suite-nav.best-status-suite-nav > nav > a {
+  display: inline-flex;
+  align-items: center;
+  min-width: 44px;
+  min-height: 44px;
+  padding: 8px 12px;
+  color: inherit;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  border-radius: 5px;
+}
+ro-suite-nav.best-status-suite-nav > nav > a:focus-visible {
+  outline: 3px solid #b6d7a8;
+  outline-offset: 2px;
+}
