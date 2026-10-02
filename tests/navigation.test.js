@@ -11,7 +11,7 @@ const hash=x=>createHash('sha256').update(x).digest('hex');
 const baseline=json('qa/best-status-nav/source-baseline.json');
 import {createRequire} from 'node:module';
 const awaitNormalize=createRequire(import.meta.url)('../qa/first-run/normalize.cjs');
-const html=read('index.html').toString();
+const html=createRequire(import.meta.url)('../qa/nav140/normalize.cjs')(read('index.html').toString());
 const release='assets/ro-suite/1.3.0/';
 
 test('original calculator, styles, data, tests, package and source limitations stay byte-identical',()=>{

@@ -1,0 +1,70 @@
+name: RO Suite nav 1.4 alignment regression
+on:
+  pull_request:
+    branches: [main]
+    types: [opened, synchronize, reopened]
+permissions:
+  contents: read
+concurrency:
+  group: nav140-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+jobs:
+  nav140-qa:
+    if: github.head_ref == 'chore/ro-suite-nav-1.4.0' && github.event.pull_request.head.repo.full_name == github.repository
+    runs-on: ubuntu-24.04
+    timeout-minutes: 45
+    defaults:
+      run:
+        shell: bash
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+          persist-credentials: false
+          fetch-depth: 0
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
+        with:
+          node-version: '22.14.0'
+      - name: Prepare immutable current and historical first-run baselines
+        run: |
+          mkdir -p qa-artifacts "$RUNNER_TEMP/nav140-base" "$RUNNER_TEMP/first-run-base"
+          printf '%s\n' '{"status":"not-run"}' > qa-artifacts/report.json
+          git rev-parse HEAD > qa-artifacts/source-commit.txt
+          git diff --name-status 3b7dd2ce37a8b3844a9a7774dda6caae2ff3fc0a HEAD > qa-artifacts/changed-files.txt
+          git archive 3b7dd2ce37a8b3844a9a7774dda6caae2ff3fc0a | tar -x -C "$RUNNER_TEMP/nav140-base"
+          git archive 42445a9eea22d28f6285df12177eda396ffc8c6f | tar -x -C "$RUNNER_TEMP/first-run-base"
+          cp qa/nav140/baseline*.json qa-artifacts/
+          sha256sum assets/ro-suite/1.4.0/* > qa-artifacts/release-sha256.txt
+      - name: All original and new source tests
+        run: node --test tests/*.test.* 2>&1 | tee qa-artifacts/source-tests.log
+      - name: Install pinned QA-only real browser
+        id: browser
+        if: always()
+        run: |
+          npm install --prefix "$RUNNER_TEMP/nav140-tools" --no-save --package-lock=false --ignore-scripts playwright@1.55.1
+          node "$RUNNER_TEMP/nav140-tools/node_modules/playwright/cli.js" install --with-deps chromium
+      - name: Real current-main output, keyboard, fallback and persistence comparison
+        if: always() && steps.browser.outcome == 'success'
+        env:
+          NODE_PATH: ${{ runner.temp }}/nav140-tools/node_modules
+          BASE_ROOT: ${{ runner.temp }}/nav140-base
+          BASE_SHA: 3b7dd2ce37a8b3844a9a7774dda6caae2ff3fc0a
+          SOURCE_SHA: ${{ github.event.pull_request.head.sha }}
+          QA_OUTPUT: ${{ github.workspace }}/qa-artifacts/regression
+          PRICE_METADATA_QA: '1'
+        run: node qa/best-status-nav/browser.cjs 2>&1 | tee qa-artifacts/browser-regression.log
+      - name: Preserve actual first-run interaction and exact calculation outputs
+        if: always() && steps.browser.outcome == 'success'
+        env:
+          NODE_PATH: ${{ runner.temp }}/nav140-tools/node_modules
+          BASE_ROOT: ${{ runner.temp }}/first-run-base
+          SOURCE_SHA: ${{ github.event.pull_request.head.sha }}
+          QA_OUTPUT: ${{ github.workspace }}/qa-artifacts/first-run
+        run: node tests/first-run.browser.cjs 2>&1 | tee qa-artifacts/first-run.log
+      - name: Upload source-linked logs, original outputs and screenshots even after failure
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: nav140-${{ github.event.pull_request.head.sha }}
+          path: qa-artifacts/
+          retention-days: 30

@@ -1,0 +1,14 @@
+[
+  [
+    "./assets/ro-suite/1.3.0/nav.js",
+    "./assets/ro-suite/1.4.0/nav.js"
+  ],
+  [
+    "</head>",
+    "  <link rel=\"stylesheet\" href=\"./assets/ro-suite/nav140-host.css\">\n</head>"
+  ],
+  [
+    "<ro-suite-nav class=\"best-status-suite-nav shell\"",
+    "<ro-suite-nav class=\"best-status-suite-nav\""
+  ]
+]
