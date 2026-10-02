@@ -34,5 +34,21 @@
   [
     "<p>แสดงทีละกิจกรรมเท่านั้น ค่าของทุกกิจกรรมยังอยู่ครบ · อุปกรณ์/บัฟและแต้มกำหนดเองเป็นตัวเลือกเพิ่มเติม</p>",
     "<p>ค่าทุกกิจกรรมยังอยู่ครบ · อุปกรณ์/บัฟเป็นตัวเลือกเพิ่มเติม</p>"
+  ],
+  [
+    "      <p>ค่าทุกกิจกรรมยังอยู่ครบ · อุปกรณ์/บัฟเป็นตัวเลือกเพิ่มเติม</p>\n      <a href=\"#planner\">",
+    "      <a href=\"#planner\">"
+  ],
+  [
+    "    <fieldset class=\"first-run-activity\" id=\"activity-start\">\n      <legend>เริ่มตรงนี้: วันนี้จะคราฟต์อะไร?</legend>\n      <p>เลือกกิจกรรม → ตั้งค่าตัวละคร → ดูสเตตัสแนะนำ</p>\n      <div class=\"first-run-options\"><label><input type=\"radio\" name=\"first-activity\" value=\"rune\" checked> Rune · สร้างรูน</label><label><input type=\"radio\" name=\"first-activity\" value=\"poison\"> Poison · สร้างพิษ</label><label><input type=\"radio\" name=\"first-activity\" value=\"potion\"> Potion · ปรุงยา</label><label><input type=\"radio\" name=\"first-activity\" value=\"all\"> เปรียบเทียบทั้งหมด</label></div>\n      <a href=\"#planner\">ตั้งค่าตัวละคร ↓</a> · <a href=\"#results-panel\">ดูผลและเลือกอาชีพ ↓</a>\n    </fieldset>\n\n    <section class=\"planner\"",
+    "    <section class=\"planner\""
+  ],
+  [
+    "      <aside class=\"character-panel\">\n        <form",
+    "      <aside class=\"character-panel\">\n    <fieldset class=\"first-run-activity\" id=\"activity-start\">\n      <legend>เริ่มตรงนี้: วันนี้จะคราฟต์อะไร?</legend>\n      <p>เลือกกิจกรรม → ตั้งค่าตัวละคร → ดูสเตตัสแนะนำ</p>\n      <div class=\"first-run-options\"><label><input type=\"radio\" name=\"first-activity\" value=\"rune\" checked> Rune · สร้างรูน</label><label><input type=\"radio\" name=\"first-activity\" value=\"poison\"> Poison · สร้างพิษ</label><label><input type=\"radio\" name=\"first-activity\" value=\"potion\"> Potion · ปรุงยา</label><label><input type=\"radio\" name=\"first-activity\" value=\"all\"> เปรียบเทียบทั้งหมด</label></div>\n      <a href=\"#planner\">ตั้งค่าตัวละคร ↓</a> · <a href=\"#results-panel\">ดูผลและเลือกอาชีพ ↓</a>\n    </fieldset>\n\n        <form"
+  ],
+  [
+    "<a href=\"#planner\">ตั้งค่าตัวละคร ↓</a>",
+    "<a href=\"#planner-form\">ตั้งค่าตัวละคร ↓</a>"
   ]
 ]

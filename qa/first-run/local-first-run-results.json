@@ -1,7 +1,7 @@
 {
   "baseCommit": "42445a9eea22d28f6285df12177eda396ffc8c6f",
   "headCommit": "local-candidate",
-  "indexSHA256": "d8df14becd17b310cbb2d871c0c60e0e9b82ebfe5a61f6dfea678a29c9096717",
+  "indexSHA256": "f9b4af2d76af9916a93559ff0371d3f1dc4dcf2eae8834f66ee11ea22378d055",
   "repo": "ro-best-status",
   "checks": [
     {
@@ -40,13 +40,13 @@
         "width": 288
       },
       "result": {
-        "y": 1557.84375,
-        "height": 3479.703125,
+        "y": 2168.34375,
+        "height": 889.734375,
         "width": 328
       },
       "cue": null,
       "overflow": 0,
-      "visibleInputs": 30,
+      "visibleInputs": 17,
       "openDetails": 0
     },
     {
@@ -59,13 +59,13 @@
         "width": 306
       },
       "result": {
-        "y": 1474.34375,
-        "height": 3363.03125,
+        "y": 2089.34375,
+        "height": 850.59375,
         "width": 346
       },
       "cue": null,
       "overflow": 0,
-      "visibleInputs": 30,
+      "visibleInputs": 17,
       "openDetails": 0
     },
     {
@@ -78,13 +78,13 @@
         "width": 224
       },
       "result": {
-        "y": 549,
-        "height": 2123.890625,
+        "y": 978.921875,
+        "height": 498.734375,
         "width": 430
       },
       "cue": null,
       "overflow": 0,
-      "visibleInputs": 30,
+      "visibleInputs": 17,
       "openDetails": 0
     },
     {
@@ -97,13 +97,13 @@
         "width": 270
       },
       "result": {
-        "y": 570.59375,
-        "height": 1296.5625,
-        "width": 954
+        "y": 855.4375,
+        "height": 885.234375,
+        "width": 309.328125
       },
       "cue": null,
       "overflow": 0,
-      "visibleInputs": 30,
+      "visibleInputs": 17,
       "openDetails": 0
     },
     {
@@ -111,22 +111,22 @@
       "width": 360,
       "colorScheme": "dark",
       "firstInput": {
-        "y": 954.875,
+        "y": 917.09375,
         "height": 39,
         "width": 288
       },
       "result": {
-        "y": 1874.5625,
-        "height": 1355.046875,
+        "y": 2141.53125,
+        "height": 889.734375,
         "width": 328
       },
       "cue": {
-        "y": 512.375,
-        "height": 300.3125,
-        "width": 328
+        "y": 536.375,
+        "height": 239.53125,
+        "width": 326
       },
       "overflow": 0,
-      "visibleInputs": 30,
+      "visibleInputs": 16,
       "openDetails": 0
     },
     {
@@ -134,22 +134,22 @@
       "width": 390,
       "colorScheme": "dark",
       "firstInput": {
-        "y": 954.875,
+        "y": 917.09375,
         "height": 39,
         "width": 306
       },
       "result": {
-        "y": 1791.0625,
-        "height": 1320.40625,
+        "y": 2062.53125,
+        "height": 850.59375,
         "width": 346
       },
       "cue": {
-        "y": 512.375,
-        "height": 300.3125,
-        "width": 346
+        "y": 536.375,
+        "height": 239.53125,
+        "width": 344
       },
       "overflow": 0,
-      "visibleInputs": 30,
+      "visibleInputs": 16,
       "openDetails": 0
     },
     {
@@ -157,22 +157,22 @@
       "width": 768,
       "colorScheme": "dark",
       "firstInput": {
-        "y": 907.109375,
+        "y": 1143.25,
         "height": 39,
         "width": 224
       },
       "result": {
-        "y": 774.921875,
-        "height": 884.0625,
+        "y": 778.953125,
+        "height": 498.734375,
         "width": 430
       },
       "cue": {
-        "y": 517,
-        "height": 225.921875,
-        "width": 708
+        "y": 550,
+        "height": 438.0625,
+        "width": 258
       },
       "overflow": 0,
-      "visibleInputs": 30,
+      "visibleInputs": 16,
       "openDetails": 0
     },
     {
@@ -180,22 +180,22 @@
       "width": 1440,
       "colorScheme": "dark",
       "firstInput": {
-        "y": 928.703125,
+        "y": 966.3125,
         "height": 39,
         "width": 270
       },
       "result": {
-        "y": 796.515625,
-        "height": 1282.171875,
+        "y": 855.4375,
+        "height": 870.84375,
         "width": 954
       },
       "cue": {
-        "y": 538.59375,
-        "height": 225.921875,
-        "width": 1296
+        "y": 571.59375,
+        "height": 239.53125,
+        "width": 312
       },
       "overflow": 0,
-      "visibleInputs": 30,
+      "visibleInputs": 16,
       "openDetails": 0
     }
   ],

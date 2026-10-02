@@ -1,6 +1,6 @@
 {
   "first": "#level",
-  "result": "#results-panel",
+  "result": ".result-card.rune",
   "cue": ".first-run-activity",
   "ready": ".result-card[data-state=\"ready\"]",
   "themes": [

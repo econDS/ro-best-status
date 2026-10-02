@@ -76,16 +76,15 @@
 
     <section id="migration-notice" class="migration-notice" role="status" hidden><div><strong>อัปเดตการคิด Job Bonus อัตโนมัติแล้ว</strong><p>ค่าที่บันทึกในรุ่นเก่าอาจรวม Job Bonus อยู่ในช่องโบนัส จึงรีเซ็ตเฉพาะโบนัสเดิมเป็น 0 เพื่อไม่ให้นับซ้ำ เลเวล สเตตัส งบ และค่าสูตรยังอยู่ กรุณากรอกใหม่เฉพาะโบนัสจากอุปกรณ์ / บัฟ</p><p id="migration-old-values" class="migration-old-values" hidden></p></div><button type="button" id="acknowledge-migration">รับทราบ</button></section>
 
+    <section class="planner" id="planner" aria-label="เครื่องคำนวณสเตตัส">
+      <aside class="character-panel">
     <fieldset class="first-run-activity" id="activity-start">
       <legend>เริ่มตรงนี้: วันนี้จะคราฟต์อะไร?</legend>
       <p>เลือกกิจกรรม → ตั้งค่าตัวละคร → ดูสเตตัสแนะนำ</p>
       <div class="first-run-options"><label><input type="radio" name="first-activity" value="rune" checked> Rune · สร้างรูน</label><label><input type="radio" name="first-activity" value="poison"> Poison · สร้างพิษ</label><label><input type="radio" name="first-activity" value="potion"> Potion · ปรุงยา</label><label><input type="radio" name="first-activity" value="all"> เปรียบเทียบทั้งหมด</label></div>
-      <p>ค่าทุกกิจกรรมยังอยู่ครบ · อุปกรณ์/บัฟเป็นตัวเลือกเพิ่มเติม</p>
-      <a href="#planner">ตั้งค่าตัวละคร ↓</a> · <a href="#results-panel">ดูผลและเลือกอาชีพ ↓</a>
+      <a href="#planner-form">ตั้งค่าตัวละคร ↓</a> · <a href="#results-panel">ดูผลและเลือกอาชีพ ↓</a>
     </fieldset>
 
-    <section class="planner" id="planner" aria-label="เครื่องคำนวณสเตตัส">
-      <aside class="character-panel">
         <form id="planner-form" novalidate>
           <div class="panel-heading"><div class="section-number">01</div><div><h2>ตั้งค่าตัวละคร</h2><p>เริ่มจากแต้มที่คุณมี</p></div><button type="button" id="reset-settings" class="icon-button" title="คืนค่าเริ่มต้น" aria-label="คืนค่าเริ่มต้น">↺</button></div>
           <div class="form-section">
