@@ -1,0 +1,16 @@
+{
+  "baseCommit": "42445a9eea22d28f6285df12177eda396ffc8c6f",
+  "indexSha256": "e1dc9479b521793de3e894cc2a21a21b177b873efd8beb68cb15131134200f84",
+  "before": {
+    "visibleActivityProfiles": 3,
+    "visibleResultCards": 3
+  },
+  "after": {
+    "visibleActivityProfiles": 1,
+    "visibleResultCards": 1,
+    "allMode": true,
+    "selectionPersists": false
+  },
+  "storage": "statforge-planner-v2; legacy statforge-planner-v1",
+  "navVersion": "1.3.0"
+}

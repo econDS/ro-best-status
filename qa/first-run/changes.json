@@ -1,0 +1,38 @@
+[
+  [
+    "    <section class=\"planner\" id=\"planner\"",
+    "    <fieldset class=\"first-run-activity\" id=\"activity-start\">\n      <legend>เริ่มตรงนี้: วันนี้จะคราฟต์อะไร?</legend>\n      <p>เลือกกิจกรรม → ใส่ Base Level และสเตตัสปัจจุบัน → เลือกอาชีพ / Job Level ของกิจกรรมนั้น → ดูสเตตัสแนะนำ</p>\n      <div class=\"first-run-options\"><label><input type=\"radio\" name=\"first-activity\" value=\"rune\" checked> Rune · สร้างรูน</label><label><input type=\"radio\" name=\"first-activity\" value=\"poison\"> Poison · สร้างพิษ</label><label><input type=\"radio\" name=\"first-activity\" value=\"potion\"> Potion · ปรุงยา</label><label><input type=\"radio\" name=\"first-activity\" value=\"all\"> เปรียบเทียบทั้งหมด</label></div>\n      <p>แสดงทีละกิจกรรมเท่านั้น ค่าของทุกกิจกรรมยังอยู่ครบ · อุปกรณ์/บัฟและแต้มกำหนดเองเป็นตัวเลือกเพิ่มเติม</p>\n      <a href=\"#planner\">ตั้งค่าตัวละคร ↓</a> · <a href=\"#results-panel\">ดูผลและเลือกอาชีพ ↓</a>\n    </fieldset>\n\n    <section class=\"planner\" id=\"planner\""
+  ],
+  [
+    "<h2>เปรียบเทียบสายคราฟต์</h2>",
+    "<h2>ผลสเตตัสที่แนะนำ</h2>"
+  ],
+  [
+    "<div class=\"results-panel\" id=\"results-panel\" aria-busy=\"true\">",
+    "<div class=\"results-panel\" id=\"results-panel\" aria-busy=\"true\" tabindex=\"-1\">"
+  ],
+  [
+    "            <label class=\"checkbox-label custom-budget-toggle\"",
+    "            <details class=\"first-run-budget\"><summary>กำหนดงบแต้มเอง (เพิ่มเติม)</summary>\n            <label class=\"checkbox-label custom-budget-toggle\""
+  ],
+  [
+    "รวมแต้มที่ใช้ไปแล้ว</span></div>\n          </div>",
+    "รวมแต้มที่ใช้ไปแล้ว</span></div>\n            </details>\n          </div>"
+  ],
+  [
+    "</head>",
+    "  <style id=\"first-run-ux\">\n    .first-run-activity { margin: 0 0 24px; padding: 16px; border: 1px solid #395459; border-radius: 12px; }\n    .first-run-activity legend { font-weight: 700; font-size: 1.1rem; padding: 0 6px; }\n    .first-run-activity p { line-height: 1.6; margin: 8px 0; }\n    .first-run-options { display: flex; flex-wrap: wrap; gap: 8px; }\n    .first-run-options label, .first-run-activity > a { display: inline-flex; gap: 8px; align-items: center; min-height: 44px; padding: 8px 12px; cursor: pointer; }\n    .first-run-options label { border: 1px solid #5b8990; border-radius: 8px; }\n    .first-run-options label:has(:checked) { background: #244350; }\n    .first-run-options label:focus-within, .first-run-activity > a:focus-visible, .first-run-budget > summary:focus-visible { outline: 3px solid #a9f3d6; outline-offset: 3px; }\n    .first-run-budget > summary { cursor: pointer; min-height: 44px; align-content: center; }\n    body[data-first-activity=\"rune\"] .profile-control:not(.rune), body[data-first-activity=\"rune\"] .result-card:not(.rune),\n    body[data-first-activity=\"poison\"] .profile-control:not(.poison), body[data-first-activity=\"poison\"] .result-card:not(.poison),\n    body[data-first-activity=\"potion\"] .profile-control:not(.potion), body[data-first-activity=\"potion\"] .result-card:not(.potion) { display: none; }\n    body[data-first-activity]:not([data-first-activity=\"all\"]) .profile-controls,\n    body[data-first-activity]:not([data-first-activity=\"all\"]) .result-cards { grid-template-columns: minmax(0,1fr); }\n    #planner, #results-panel { scroll-margin-top: 16px; }\n  </style>\n</head>"
+  ],
+  [
+    "</body>",
+    "  <script>\n    // View-only activity selection. Never writes planner settings, URL, or storage.\n    document.body.dataset.firstActivity = 'rune';\n    document.getElementById('activity-start').addEventListener('change', event => {\n      if (event.target.name === 'first-activity') document.body.dataset.firstActivity = event.target.value;\n    });\n    document.addEventListener('DOMContentLoaded', () => {\n      if (document.getElementById('custom-budget-enabled').checked) document.querySelector('.first-run-budget').open = true;\n    });\n  </script>\n</body>"
+  ],
+  [
+    "<p>เลือกกิจกรรม → ใส่ Base Level และสเตตัสปัจจุบัน → เลือกอาชีพ / Job Level ของกิจกรรมนั้น → ดูสเตตัสแนะนำ</p>",
+    "<p>เลือกกิจกรรม → ตั้งค่าตัวละคร → ดูสเตตัสแนะนำ</p>"
+  ],
+  [
+    "<p>แสดงทีละกิจกรรมเท่านั้น ค่าของทุกกิจกรรมยังอยู่ครบ · อุปกรณ์/บัฟและแต้มกำหนดเองเป็นตัวเลือกเพิ่มเติม</p>",
+    "<p>ค่าทุกกิจกรรมยังอยู่ครบ · อุปกรณ์/บัฟเป็นตัวเลือกเพิ่มเติม</p>"
+  ]
+]

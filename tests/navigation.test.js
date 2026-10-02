@@ -9,6 +9,8 @@ const read=p=>readFileSync(new URL(p,root));
 const json=p=>JSON.parse(read(p));
 const hash=x=>createHash('sha256').update(x).digest('hex');
 const baseline=json('qa/best-status-nav/source-baseline.json');
+import {createRequire} from 'node:module';
+const awaitNormalize=createRequire(import.meta.url)('../qa/first-run/normalize.cjs');
 const html=read('index.html').toString();
 const release='assets/ro-suite/1.3.0/';
 
@@ -18,7 +20,7 @@ test('original calculator, styles, data, tests, package and source limitations s
   for(const [path,expected] of Object.entries(baseline.files)){
     if(path!=='index.html')assert.equal(hash(read(path)),expected,path);
   }
-  let unbranded=html;
+  let unbranded=(awaitNormalize)(html);
   for(const [before,after] of json('qa/brand-consistency/copy-changes.json').replacements){assert.equal(unbranded.split(after).length-1,1,'exact approved branding copy: '+after);unbranded=unbranded.replace(after,before);}
   const original=unbranded.replace('  <!-- RO suite navigation styles: isolated to the host and its fallback. -->\n  <link rel="stylesheet" href="./assets/ro-suite/integration.css">\n','')
     .replace(/  <!-- RO suite navigation: calculator remains independent if the module fails\. -->\n[\s\S]*?  <!-- End RO suite navigation\. -->\n/,'');
