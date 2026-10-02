@@ -1,4 +1,4 @@
-# RO Suite Nav 1.4.0 alignment rollout
+# RO Suite Nav 1.4.1 alignment rollout
 
 Baseline: `3b7dd2ce37a8b3844a9a7774dda6caae2ff3fc0a`. Original source tests passed before edits (22 tests). Actual pre-edit Chromium layout evidence is recorded in `baseline-browser-receipt.json`: [baseline run](https://github.com/econDS/ro_tools_portal/actions/runs/37075741836). Six widths: 320, 360, 390, 430, 768, 1440. The previous navbar measured 98px on narrow screens and 68px on wider screens, with bar edges inset 9px or 15px from the real app content.
 
@@ -15,3 +15,6 @@ All original source assertions are retained. The branch-scoped read-only workflo
 
 ## Rollback
 Revert this rollout commit. Earlier release files remain available. No storage or data migration and no deployment workflow changes. Draft review only; do not merge before the source-of-truth PR is ready.
+
+## Additive 1.4.1 accessibility patch
+The final module reference is 1.4.1 from immutable Portal source `ac62659a26539d802111d255edb92b09ec68382b`. It keeps the optional catalog status live region exposed while empty by using zero margin rather than display:none. The existing 1.4.0 directory is preserved byte-for-byte, catalog/destinations are unchanged, and no host CSS or application behavior changed. Source guards independently validate both releases. Final-head Chromium checks rerun for this patch.

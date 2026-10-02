@@ -14,7 +14,7 @@ test('nav140 exact immutable source bundle, catalog and lock; old releases remai
  const lock=JSON.parse(read(dir+'nav.lock.json'));assert.equal(lock.bundleVersion,'1.4.0');assert.equal(lock.sourceCommit,'24ca1068c8f6868b38d6224e661f818fec9897f9');
  for(const [file,entry]of Object.entries(lock.files))assert.equal(hash(read(dir+file)),entry.sha256,file);
  assert.deepEqual(JSON.parse(read(dir+'catalog.snapshot.json')),JSON.parse(read('assets/ro-suite/1.3.0/catalog.snapshot.json')),'same IDs, destinations, identities and planned status');
- assert.equal((html.match(/assets\/ro-suite\/1\.4\.0\/nav\.js/g)||[]).length,1);assert(!html.includes('assets/ro-suite/1.3.0/nav.js'));
+ assert.equal((html.match(/assets\/ro-suite\/1\.4\.1\/nav\.js/g)||[]).length,1);assert(!html.includes('assets/ro-suite/1.3.0/nav.js'));
 });
 test('nav140 host CSS is scoped and derives the real app shell without altering app CSS',()=>{
  const css=read('assets/ro-suite/nav140-host.css').toString();
@@ -27,4 +27,13 @@ test('nav140 host CSS is scoped and derives the real app shell without altering 
 test('nav140 QA is pinned, same-repository read-only PR validation without publication',()=>{
  const w=read('.github/workflows/nav140-qa.yml').toString();assert.match(w,/permissions:\n  contents: read/);assert.match(w,/github.head_ref == 'chore\/ro-suite-nav-1.4.0'/);assert.match(w,/github.event.pull_request.head.repo.full_name == github.repository/);assert.match(w,/persist-credentials: false/);assert.match(w,/ref: \$\{\{ github.event.pull_request.head.sha \}\}/);assert.match(w,/playwright@1.55.1/);
  assert(!/pull_request_target|workflow_run|workflow_dispatch|(?:contents|pages|id-token):\s*write|write-all|git\s+push|gh\s+pr\s+merge|deploy-pages|upload-pages-artifact|secrets\./.test(w));for(const m of w.matchAll(/uses:\s*([^\s#]+)/g))assert.match(m[1],/^[^@]+@[a-f0-9]{40}$/);
+});
+
+test('1.4.1 accessibility patch is exact and keeps the 1.4.0 release immutable',()=>{
+ const dir='assets/ro-suite/1.4.1/';assert.deepEqual(fs.readdirSync(path.join(root,dir)).sort(),Object.keys(baseline.patchRelease).sort());
+ for(const [file,expected]of Object.entries(baseline.patchRelease))assert.equal(hash(read(dir+file)),expected,file);
+ const lock=JSON.parse(read(dir+'nav.lock.json'));assert.equal(lock.bundleVersion,'1.4.1');assert.equal(lock.sourceCommit,baseline.patchSourceCommit);assert.equal(lock.sourceCommit,'ac62659a26539d802111d255edb92b09ec68382b');
+ for(const [file,entry]of Object.entries(lock.files))assert.equal(hash(read(dir+file)),entry.sha256,file);
+ assert.deepEqual(read(dir+'catalog.snapshot.json'),read('assets/ro-suite/1.4.0/catalog.snapshot.json'));
+ const bundle=read(dir+'nav.js').toString();assert(bundle.includes('p:empty{margin:0}'));assert(!bundle.includes('p:empty,[hidden]'));assert(bundle.includes('role'));
 });
