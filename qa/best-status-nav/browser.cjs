@@ -39,7 +39,8 @@ const report = {
     'Operating-system light and dark preferences are tested against the actual fixed dark app. There is no theme toggle, share feature or import/export feature.',
     'Only top-level navigation to exact published suite URLs is fulfilled with a destination marker; this proves activation and the URL, not remote-site availability.',
     'The blocked-module cases abort the actual nav.js request. Only diagnostics attributed to that exact deliberately aborted resource may be excluded from baseline comparison.',
-    'Original layout is compared relative to the original site header to permit the new normal-flow navbar. Any original narrow-screen overflow remains reported and cannot increase.'
+    'Original layout is compared relative to the original site header to permit the new normal-flow navbar. Any original narrow-screen overflow remains reported and cannot increase.',
+    'DOM normalization removes timing text and inert empty style attributes left by Playwright screenshot caret restoration. Nonempty styles, controls, outputs and original source bytes remain checked.'
   ]
 };
 function normalize(value) { let v = String(value); for (const origin of origins) v = v.split(origin).join('http://local.test'); return v; }
@@ -103,6 +104,9 @@ async function snapshot(page) {
     }));
     const dom = [...document.querySelectorAll('body > .site-header, body > main, body > footer')].map(e => {
       const c = e.cloneNode(true);
+      // Playwright screenshots temporarily hide carets, then restore an empty style
+      // attribute. A navigation/reload removes it; it is not an application change.
+      c.querySelectorAll('[style=""]').forEach(e => e.removeAttribute('style'));
       c.querySelectorAll('.card-timing span').forEach(e => e.textContent = '[measured timing]');
       c.querySelectorAll('#calculation-info').forEach(e => e.textContent = e.textContent.replace(/(?:<\s*)?[\d.]+ ms/g, '[measured timing]'));
       return c.outerHTML;
