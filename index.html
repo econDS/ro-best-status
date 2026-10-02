@@ -11,6 +11,23 @@
   <!-- RO suite navigation styles: isolated to the host and its fallback. -->
   <link rel="stylesheet" href="./assets/ro-suite/integration.css">
   <script type="module" src="./app.js"></script>
+  <style id="first-run-ux">
+    .first-run-activity { margin: 0 0 24px; padding: 16px; border: 1px solid #395459; border-radius: 12px; }
+    .first-run-activity legend { font-weight: 700; font-size: 1.1rem; padding: 0 6px; }
+    .first-run-activity p { line-height: 1.6; margin: 8px 0; }
+    .first-run-options { display: flex; flex-wrap: wrap; gap: 8px; }
+    .first-run-options label, .first-run-activity > a { display: inline-flex; gap: 8px; align-items: center; min-height: 44px; padding: 8px 12px; cursor: pointer; }
+    .first-run-options label { border: 1px solid #5b8990; border-radius: 8px; }
+    .first-run-options label:has(:checked) { background: #244350; }
+    .first-run-options label:focus-within, .first-run-activity > a:focus-visible, .first-run-budget > summary:focus-visible { outline: 3px solid #a9f3d6; outline-offset: 3px; }
+    .first-run-budget > summary { cursor: pointer; min-height: 44px; align-content: center; }
+    body[data-first-activity="rune"] .profile-control:not(.rune), body[data-first-activity="rune"] .result-card:not(.rune),
+    body[data-first-activity="poison"] .profile-control:not(.poison), body[data-first-activity="poison"] .result-card:not(.poison),
+    body[data-first-activity="potion"] .profile-control:not(.potion), body[data-first-activity="potion"] .result-card:not(.potion) { display: none; }
+    body[data-first-activity]:not([data-first-activity="all"]) .profile-controls,
+    body[data-first-activity]:not([data-first-activity="all"]) .result-cards { grid-template-columns: minmax(0,1fr); }
+    #planner, #results-panel { scroll-margin-top: 16px; }
+  </style>
 </head>
 <body>
   <a class="skip-link" href="#planner">ข้ามไปเครื่องคำนวณ</a>
@@ -61,6 +78,13 @@
 
     <section class="planner" id="planner" aria-label="เครื่องคำนวณสเตตัส">
       <aside class="character-panel">
+    <fieldset class="first-run-activity" id="activity-start">
+      <legend>เริ่มตรงนี้: วันนี้จะคราฟต์อะไร?</legend>
+      <p>เลือกกิจกรรม → ตั้งค่าตัวละคร → ดูสเตตัสแนะนำ</p>
+      <div class="first-run-options"><label><input type="radio" name="first-activity" value="rune" checked> Rune · สร้างรูน</label><label><input type="radio" name="first-activity" value="poison"> Poison · สร้างพิษ</label><label><input type="radio" name="first-activity" value="potion"> Potion · ปรุงยา</label><label><input type="radio" name="first-activity" value="all"> เปรียบเทียบทั้งหมด</label></div>
+      <a href="#planner-form">ตั้งค่าตัวละคร ↓</a> · <a href="#results-panel">ดูผลและเลือกอาชีพ ↓</a>
+    </fieldset>
+
         <form id="planner-form" novalidate>
           <div class="panel-heading"><div class="section-number">01</div><div><h2>ตั้งค่าตัวละคร</h2><p>เริ่มจากแต้มที่คุณมี</p></div><button type="button" id="reset-settings" class="icon-button" title="คืนค่าเริ่มต้น" aria-label="คืนค่าเริ่มต้น">↺</button></div>
           <div class="form-section">
@@ -68,8 +92,10 @@
             <span id="level-hint" class="field-hint">เลือกอาชีพแยกแต่ละกิจกรรมด้านขวา · เพดานและงบคำนวณตามอาชีพ</span>
             <label class="checkbox-label" for="transcended"><input type="checkbox" id="transcended" name="transcended"><span>ผ่านการจุติแล้ว <small>ใช้กับ Class 3</small></span></label>
             <p class="field-hint rebirth-hint">Assassin Cross / Creator ใช้สถานะจุติเสมอ · Alchemist ใช้สถานะไม่จุติ</p><div class="budget-box"><span>งบตั้งต้นร่วมกัน</span><strong id="budget-display">—<small>POINTS</small></strong><div class="budget-foot"><span id="budget-source">ตามเลเวลและการจุติ</span><span id="spent-display">ใช้แล้ว —</span></div></div>
+            <details class="first-run-budget"><summary>กำหนดงบแต้มเอง (เพิ่มเติม)</summary>
             <label class="checkbox-label custom-budget-toggle" for="custom-budget-enabled"><input type="checkbox" id="custom-budget-enabled"><span>กำหนดแต้มรวมเอง</span></label>
             <div id="custom-budget-field" hidden><label for="custom-budget">แต้มรวมทั้งหมด<input id="custom-budget" type="number" inputmode="numeric" min="0" max="1000000" step="1" value="1273" aria-describedby="custom-hint"></label><span id="custom-hint" class="field-hint">แต้มทั้งหมดของตัวละคร รวมแต้มที่ใช้ไปแล้ว</span></div>
+            </details>
           </div>
 
           <div class="form-section stats-section"><div class="field-heading"><h3>สเตตัสปัจจุบัน</h3><button type="button" id="clear-stats" class="text-button">ตั้งทั้งหมดเป็น 1</button></div><p class="field-hint">เฉพาะ Base Stat ไม่รวม Job Bonus อุปกรณ์ และบัฟ · ค่าเกินเพดานจะปิดเฉพาะการ์ดที่ไม่รองรับ</p><div id="base-stats" class="stats-input-grid"></div>
@@ -100,8 +126,8 @@
         </form>
       </aside>
 
-      <div class="results-panel" id="results-panel" aria-busy="true">
-        <div class="results-heading"><div><div class="eyebrow muted">YOUR NEXT BEST BUILD</div><h2>เปรียบเทียบสายคราฟต์</h2></div><span class="result-status" id="result-status" role="status" aria-live="polite" aria-atomic="true"><i aria-hidden="true"></i> กำลังคำนวณ</span></div>
+      <div class="results-panel" id="results-panel" aria-busy="true" tabindex="-1">
+        <div class="results-heading"><div><div class="eyebrow muted">YOUR NEXT BEST BUILD</div><h2>ผลสเตตัสที่แนะนำ</h2></div><span class="result-status" id="result-status" role="status" aria-live="polite" aria-atomic="true"><i aria-hidden="true"></i> กำลังคำนวณ</span></div>
         <p class="results-caption">แต่ละการ์ดคือการจัดสรรแต้มทั้งชุดสำหรับกิจกรรมนั้น เลือกอาชีพและ Job Level แยกกัน · เลือกใช้ทีละชุด</p>
         <section class="profiles-section" aria-labelledby="profiles-title"><div class="profiles-heading"><h3 id="profiles-title">อาชีพและ Job Level</h3><span>Job Bonus อัตโนมัติ</span></div><div id="profile-controls" class="profile-controls"></div></section>
         <div id="result-cards" class="result-cards"></div>
@@ -125,5 +151,15 @@
   </main>
   <footer class="site-footer shell"><span>STATFORGE <span class="footer-separator">/</span> A LITTLE MATH. A BETTER BUILD.</span><span>สร้างเพื่อชาว Midgard <span class="footer-sparkle" aria-hidden="true">✧</span></span></footer>
   <noscript><div class="noscript">เครื่องคำนวณนี้ต้องใช้ JavaScript กรุณาเปิดใช้งานในเบราว์เซอร์</div></noscript>
+  <script>
+    // View-only activity selection. Never writes planner settings, URL, or storage.
+    document.body.dataset.firstActivity = 'rune';
+    document.getElementById('activity-start').addEventListener('change', event => {
+      if (event.target.name === 'first-activity') document.body.dataset.firstActivity = event.target.value;
+    });
+    document.addEventListener('DOMContentLoaded', () => {
+      if (document.getElementById('custom-budget-enabled').checked) document.querySelector('.first-run-budget').open = true;
+    });
+  </script>
 </body>
 </html>

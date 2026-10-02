@@ -1,0 +1,28 @@
+{
+  "first": "#level",
+  "result": ".result-card.rune",
+  "cue": ".first-run-activity",
+  "ready": ".result-card[data-state=\"ready\"]",
+  "themes": [
+    "dark"
+  ],
+  "cases": [
+    {
+      "name": "default",
+      "fields": {}
+    },
+    {
+      "name": "level150",
+      "fields": {
+        "level": 150
+      }
+    },
+    {
+      "name": "existing-dex50",
+      "fields": {
+        "base-DEX": 50
+      }
+    }
+  ],
+  "repo": "ro-best-status"
+}

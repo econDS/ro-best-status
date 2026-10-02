@@ -1,0 +1,412 @@
+{
+  "baseCommit": "42445a9eea22d28f6285df12177eda396ffc8c6f",
+  "headCommit": "local-candidate",
+  "indexSHA256": "f9b4af2d76af9916a93559ff0371d3f1dc4dcf2eae8834f66ee11ea22378d055",
+  "repo": "ro-best-status",
+  "checks": [
+    {
+      "width": 360,
+      "colorScheme": "dark",
+      "status": "PASS",
+      "checks": "first cue, original or lower overflow, unique IDs, native labels, minimum path, view-only state/output invariants"
+    },
+    {
+      "width": 390,
+      "colorScheme": "dark",
+      "status": "PASS",
+      "checks": "first cue, original or lower overflow, unique IDs, native labels, minimum path, view-only state/output invariants"
+    },
+    {
+      "width": 768,
+      "colorScheme": "dark",
+      "status": "PASS",
+      "checks": "first cue, original or lower overflow, unique IDs, native labels, minimum path, view-only state/output invariants"
+    },
+    {
+      "width": 1440,
+      "colorScheme": "dark",
+      "status": "PASS",
+      "checks": "first cue, original or lower overflow, unique IDs, native labels, minimum path, view-only state/output invariants"
+    }
+  ],
+  "geometry": [
+    {
+      "kind": "before",
+      "width": 360,
+      "colorScheme": "dark",
+      "firstInput": {
+        "y": 653.5625,
+        "height": 39,
+        "width": 288
+      },
+      "result": {
+        "y": 2168.34375,
+        "height": 889.734375,
+        "width": 328
+      },
+      "cue": null,
+      "overflow": 0,
+      "visibleInputs": 17,
+      "openDetails": 0
+    },
+    {
+      "kind": "before",
+      "width": 390,
+      "colorScheme": "dark",
+      "firstInput": {
+        "y": 653.5625,
+        "height": 39,
+        "width": 306
+      },
+      "result": {
+        "y": 2089.34375,
+        "height": 850.59375,
+        "width": 346
+      },
+      "cue": null,
+      "overflow": 0,
+      "visibleInputs": 17,
+      "openDetails": 0
+    },
+    {
+      "kind": "before",
+      "width": 768,
+      "colorScheme": "dark",
+      "firstInput": {
+        "y": 681.1875,
+        "height": 39,
+        "width": 224
+      },
+      "result": {
+        "y": 978.921875,
+        "height": 498.734375,
+        "width": 430
+      },
+      "cue": null,
+      "overflow": 0,
+      "visibleInputs": 17,
+      "openDetails": 0
+    },
+    {
+      "kind": "before",
+      "width": 1440,
+      "colorScheme": "dark",
+      "firstInput": {
+        "y": 702.78125,
+        "height": 39,
+        "width": 270
+      },
+      "result": {
+        "y": 855.4375,
+        "height": 885.234375,
+        "width": 309.328125
+      },
+      "cue": null,
+      "overflow": 0,
+      "visibleInputs": 17,
+      "openDetails": 0
+    },
+    {
+      "kind": "after",
+      "width": 360,
+      "colorScheme": "dark",
+      "firstInput": {
+        "y": 917.09375,
+        "height": 39,
+        "width": 288
+      },
+      "result": {
+        "y": 2141.53125,
+        "height": 889.734375,
+        "width": 328
+      },
+      "cue": {
+        "y": 536.375,
+        "height": 239.53125,
+        "width": 326
+      },
+      "overflow": 0,
+      "visibleInputs": 16,
+      "openDetails": 0
+    },
+    {
+      "kind": "after",
+      "width": 390,
+      "colorScheme": "dark",
+      "firstInput": {
+        "y": 917.09375,
+        "height": 39,
+        "width": 306
+      },
+      "result": {
+        "y": 2062.53125,
+        "height": 850.59375,
+        "width": 346
+      },
+      "cue": {
+        "y": 536.375,
+        "height": 239.53125,
+        "width": 344
+      },
+      "overflow": 0,
+      "visibleInputs": 16,
+      "openDetails": 0
+    },
+    {
+      "kind": "after",
+      "width": 768,
+      "colorScheme": "dark",
+      "firstInput": {
+        "y": 1143.25,
+        "height": 39,
+        "width": 224
+      },
+      "result": {
+        "y": 778.953125,
+        "height": 498.734375,
+        "width": 430
+      },
+      "cue": {
+        "y": 550,
+        "height": 438.0625,
+        "width": 258
+      },
+      "overflow": 0,
+      "visibleInputs": 16,
+      "openDetails": 0
+    },
+    {
+      "kind": "after",
+      "width": 1440,
+      "colorScheme": "dark",
+      "firstInput": {
+        "y": 966.3125,
+        "height": 39,
+        "width": 270
+      },
+      "result": {
+        "y": 855.4375,
+        "height": 870.84375,
+        "width": 954
+      },
+      "cue": {
+        "y": 571.59375,
+        "height": 239.53125,
+        "width": 312
+      },
+      "overflow": 0,
+      "visibleInputs": 16,
+      "openDetails": 0
+    }
+  ],
+  "cases": {
+    "before": [
+      {
+        "name": "default",
+        "input": {},
+        "output": [
+          {
+            "activity": "rune",
+            "state": "ready",
+            "rate": "70.60%",
+            "stats": "STR1AGI1VIT1INT1DEX69+68LUK115+114",
+            "points": "แต้มที่ใช้ทั้งหมด1,273แต้มเหลือ0",
+            "caution": "ค่าดิบตาม iRO Wiki · อาจเกิน 100%"
+          },
+          {
+            "activity": "poison",
+            "state": "ready",
+            "rate": "84.80%",
+            "stats": "STR1AGI1VIT1INT1DEX106+105LUK90+89",
+            "points": "แต้มที่ใช้ทั้งหมด1,269แต้มเหลือ4",
+            "caution": "ค่าดิบตาม iRO Wiki · อาจเกิน 100%"
+          },
+          {
+            "activity": "potion",
+            "state": "ready",
+            "rate": "86.95–96.95%",
+            "stats": "STR1AGI1VIT1INT42+41DEX91+90LUK95+94",
+            "points": "แต้มที่ใช้ทั้งหมด1,270แต้มเหลือ3",
+            "caution": "สูตรปรุงยามีข้อโต้แย้ง · ค่าดิบตามช่วงไอเท็ม"
+          }
+        ]
+      },
+      {
+        "name": "level150",
+        "input": {
+          "level": 150
+        },
+        "output": [
+          {
+            "activity": "rune",
+            "state": "ready",
+            "rate": "73.83%",
+            "stats": "STR1AGI1VIT1INT1DEX121+120LUK130+129",
+            "points": "แต้มที่ใช้ทั้งหมด2,530แต้มเหลือ15",
+            "caution": "ค่าดิบตาม iRO Wiki · อาจเกิน 100%"
+          },
+          {
+            "activity": "poison",
+            "state": "ready",
+            "rate": "100.60%",
+            "stats": "STR1AGI1VIT1INT1DEX130+129LUK121+120",
+            "points": "แต้มที่ใช้ทั้งหมด2,530แต้มเหลือ15",
+            "caution": "ค่าดิบตาม iRO Wiki · อาจเกิน 100%"
+          },
+          {
+            "activity": "potion",
+            "state": "ready",
+            "rate": "94.35–104.35%",
+            "stats": "STR1AGI1VIT1INT100+99DEX115+114LUK116+115",
+            "points": "แต้มที่ใช้ทั้งหมด2,545แต้มเหลือ0",
+            "caution": "สูตรปรุงยามีข้อโต้แย้ง · ค่าดิบตามช่วงไอเท็ม"
+          }
+        ]
+      },
+      {
+        "name": "existing-dex50",
+        "input": {
+          "base-DEX": 50
+        },
+        "output": [
+          {
+            "activity": "rune",
+            "state": "ready",
+            "rate": "73.83%",
+            "stats": "STR1AGI1VIT1INT1DEX121+71LUK130+129",
+            "points": "แต้มที่ใช้ทั้งหมด2,530แต้มเหลือ15",
+            "caution": "ค่าดิบตาม iRO Wiki · อาจเกิน 100%"
+          },
+          {
+            "activity": "poison",
+            "state": "ready",
+            "rate": "100.60%",
+            "stats": "STR1AGI1VIT1INT1DEX130+80LUK121+120",
+            "points": "แต้มที่ใช้ทั้งหมด2,530แต้มเหลือ15",
+            "caution": "ค่าดิบตาม iRO Wiki · อาจเกิน 100%"
+          },
+          {
+            "activity": "potion",
+            "state": "ready",
+            "rate": "94.35–104.35%",
+            "stats": "STR1AGI1VIT1INT100+99DEX115+65LUK116+115",
+            "points": "แต้มที่ใช้ทั้งหมด2,545แต้มเหลือ0",
+            "caution": "สูตรปรุงยามีข้อโต้แย้ง · ค่าดิบตามช่วงไอเท็ม"
+          }
+        ]
+      }
+    ],
+    "after": [
+      {
+        "name": "default",
+        "input": {},
+        "output": [
+          {
+            "activity": "rune",
+            "state": "ready",
+            "rate": "70.60%",
+            "stats": "STR1AGI1VIT1INT1DEX69+68LUK115+114",
+            "points": "แต้มที่ใช้ทั้งหมด1,273แต้มเหลือ0",
+            "caution": "ค่าดิบตาม iRO Wiki · อาจเกิน 100%"
+          },
+          {
+            "activity": "poison",
+            "state": "ready",
+            "rate": "84.80%",
+            "stats": "STR1AGI1VIT1INT1DEX106+105LUK90+89",
+            "points": "แต้มที่ใช้ทั้งหมด1,269แต้มเหลือ4",
+            "caution": "ค่าดิบตาม iRO Wiki · อาจเกิน 100%"
+          },
+          {
+            "activity": "potion",
+            "state": "ready",
+            "rate": "86.95–96.95%",
+            "stats": "STR1AGI1VIT1INT42+41DEX91+90LUK95+94",
+            "points": "แต้มที่ใช้ทั้งหมด1,270แต้มเหลือ3",
+            "caution": "สูตรปรุงยามีข้อโต้แย้ง · ค่าดิบตามช่วงไอเท็ม"
+          }
+        ]
+      },
+      {
+        "name": "level150",
+        "input": {
+          "level": 150
+        },
+        "output": [
+          {
+            "activity": "rune",
+            "state": "ready",
+            "rate": "73.83%",
+            "stats": "STR1AGI1VIT1INT1DEX121+120LUK130+129",
+            "points": "แต้มที่ใช้ทั้งหมด2,530แต้มเหลือ15",
+            "caution": "ค่าดิบตาม iRO Wiki · อาจเกิน 100%"
+          },
+          {
+            "activity": "poison",
+            "state": "ready",
+            "rate": "100.60%",
+            "stats": "STR1AGI1VIT1INT1DEX130+129LUK121+120",
+            "points": "แต้มที่ใช้ทั้งหมด2,530แต้มเหลือ15",
+            "caution": "ค่าดิบตาม iRO Wiki · อาจเกิน 100%"
+          },
+          {
+            "activity": "potion",
+            "state": "ready",
+            "rate": "94.35–104.35%",
+            "stats": "STR1AGI1VIT1INT100+99DEX115+114LUK116+115",
+            "points": "แต้มที่ใช้ทั้งหมด2,545แต้มเหลือ0",
+            "caution": "สูตรปรุงยามีข้อโต้แย้ง · ค่าดิบตามช่วงไอเท็ม"
+          }
+        ]
+      },
+      {
+        "name": "existing-dex50",
+        "input": {
+          "base-DEX": 50
+        },
+        "output": [
+          {
+            "activity": "rune",
+            "state": "ready",
+            "rate": "73.83%",
+            "stats": "STR1AGI1VIT1INT1DEX121+71LUK130+129",
+            "points": "แต้มที่ใช้ทั้งหมด2,530แต้มเหลือ15",
+            "caution": "ค่าดิบตาม iRO Wiki · อาจเกิน 100%"
+          },
+          {
+            "activity": "poison",
+            "state": "ready",
+            "rate": "100.60%",
+            "stats": "STR1AGI1VIT1INT1DEX130+80LUK121+120",
+            "points": "แต้มที่ใช้ทั้งหมด2,530แต้มเหลือ15",
+            "caution": "ค่าดิบตาม iRO Wiki · อาจเกิน 100%"
+          },
+          {
+            "activity": "potion",
+            "state": "ready",
+            "rate": "94.35–104.35%",
+            "stats": "STR1AGI1VIT1INT100+99DEX115+65LUK116+115",
+            "points": "แต้มที่ใช้ทั้งหมด2,545แต้มเหลือ0",
+            "caution": "สูตรปรุงยามีข้อโต้แย้ง · ค่าดิบตามช่วงไอเท็ม"
+          }
+        ]
+      }
+    ]
+  },
+  "screenshots": [
+    "before-360-dark.png",
+    "before-390-dark.png",
+    "before-768-dark.png",
+    "before-1440-dark.png",
+    "after-360-dark.png",
+    "after-390-dark.png",
+    "after-768-dark.png",
+    "after-1440-dark.png"
+  ],
+  "limitations": [
+    "Chromium emulation, not physical devices or WebKit/Firefox",
+    "No user study or usability score",
+    "View changes do not claim game-data verification"
+  ],
+  "status": "PASS"
+}
