@@ -1,0 +1,38 @@
+/* Nav-only integration mirrors the existing .shell border-box and breakpoints.
+ * The nav host does not also carry .shell, preventing double gutters. */
+ro-suite-nav.best-status-suite-nav {
+  display: block;
+  padding-top: 0;
+  --ro-suite-content-max-width: 1392px;
+  --ro-suite-inline-padding: 48px;
+}
+@media (min-width: 1500px) {
+  ro-suite-nav.best-status-suite-nav { --ro-suite-content-max-width: 1488px; }
+}
+@media (max-width: 1199px) {
+  ro-suite-nav.best-status-suite-nav { --ro-suite-inline-padding: 30px; }
+}
+@media (max-width: 720px) {
+  ro-suite-nav.best-status-suite-nav { --ro-suite-inline-padding: 22px; }
+}
+@media (max-width: 380px) {
+  ro-suite-nav.best-status-suite-nav { --ro-suite-inline-padding: 16px; }
+}
+/* The original light-DOM Portal link remains usable without the module. */
+ro-suite-nav.best-status-suite-nav > nav {
+  box-sizing: border-box;
+  width: 100%;
+  max-width: var(--ro-suite-content-max-width);
+  min-height: 52px;
+  margin-inline: auto;
+  padding: 4px var(--ro-suite-inline-padding);
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+}
+ro-suite-nav.best-status-suite-nav > nav > a {
+  box-sizing: border-box;
+  min-width: 44px;
+  min-height: 44px;
+  padding: 8px 0;
+}
