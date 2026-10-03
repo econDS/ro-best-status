@@ -1,0 +1,48 @@
+{
+  "theme": "Fixed dark; color-scheme:dark and nav theme=\"dark\"",
+  "layout": "assets/ro-suite/nav140-host.css:1-38;1392px max,1488px >=1500px;48px gutters,30 <=1199,22 <=720,16 <=380",
+  "modes": {
+    "dark": {
+      "tokens": {
+        "surface": "#14212d",
+        "surface-hover": "#172633",
+        "text": "#edf2ef",
+        "muted": "#8d9fa8",
+        "border": "#293945",
+        "accent": "#88dfbf",
+        "focus": "#88dfbf",
+        "font-family": "\"Noto Sans Thai\",\"Leelawadee UI\",Tahoma,system-ui,-apple-system,sans-serif"
+      },
+      "sources": [
+        "styles.css:1-15",
+        "styles.css:24-32",
+        "styles.css:54-56"
+      ],
+      "minimum_contrast_against_surface_and_hover": {
+        "text": 13.624,
+        "muted": 5.624,
+        "accent": 9.809,
+        "focus": 9.809
+      },
+      "source_urls": [
+        "https://github.com/econDS/ro-best-status/blob/81b8e316bfc4a81c3457c265da96586d9949a8e0/styles.css#L1-L15",
+        "https://github.com/econDS/ro-best-status/blob/81b8e316bfc4a81c3457c265da96586d9949a8e0/styles.css#L24-L32",
+        "https://github.com/econDS/ro-best-status/blob/81b8e316bfc4a81c3457c265da96586d9949a8e0/styles.css#L54-L56"
+      ]
+    }
+  },
+  "bindings": {
+    "surface": "var(--panel)",
+    "surface-hover": "var(--panel2)",
+    "text": "var(--text)",
+    "muted": "var(--muted)",
+    "border": "var(--line)",
+    "accent": "var(--mint)",
+    "focus": "var(--mint)",
+    "font-family": "\"Noto Sans Thai\",\"Leelawadee UI\",Tahoma,system-ui,-apple-system,sans-serif"
+  },
+  "notes": "Old integration.css fallback retains Portal green colors and focus despite nav140 alignment override; replace nav fallback colors with host semantic tokens too.",
+  "commit": "81b8e316bfc4a81c3457c265da96586d9949a8e0",
+  "branch": "main",
+  "clean": true
+}
