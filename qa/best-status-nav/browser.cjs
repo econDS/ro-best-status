@@ -15,7 +15,7 @@ const BASE_ROOT = process.env.BASE_ROOT && path.resolve(process.env.BASE_ROOT);
 const OUTPUT = path.resolve(process.env.QA_OUTPUT || path.join(ROOT, 'qa-artifacts'));
 const PREFIX = '/ro-best-status/';
 const SUFFIX = '?qa=preserve%20me&repeat=a&repeat=b#qa-sentinel';
-const NAV_PATH = 'assets/ro-suite/1.5.0/nav.js';
+const NAV_PATH = 'assets/ro-suite/1.5.1/nav.js';
 const PIN = '1.55.1';
 const PORTAL = 'https://econds.github.io/ro_tools_portal/';
 const SELF = 'https://econds.github.io/ro-best-status/';
@@ -231,10 +231,31 @@ async function functional(page, run, base) {
   }, page);
 }
 async function active(page) { return page.evaluate(() => { const e = document.activeElement?.shadowRoot?.activeElement || document.activeElement; return { tag: e.tagName, id: e.id, class: e.className, href: e.getAttribute('href'), outline: getComputedStyle(e).outlineStyle }; }); }
+async function assertHostTheme(page) {
+  const audit=JSON.parse(fs.readFileSync(path.join(ROOT,'qa/nav150/host-theme.json'),'utf8'));
+  const expected=Object.values(audit.modes)[0].tokens;
+  const actual=await page.locator('ro-suite-nav').evaluate((host,expected)=>{
+    const root=host.shadowRoot||host;const probe=document.createElement('span');root.append(probe);
+    const resolved={},normalized={};
+    for(const [key,value]of Object.entries(expected)){
+      if(key==='font-family')continue;
+      probe.style.color=`var(--ro-suite-${key})`;resolved[key]=getComputedStyle(probe).color;
+      probe.style.color=value;normalized[key]=getComputedStyle(probe).color;
+    }
+    const nav=root.querySelector('nav'),styles=getComputedStyle(nav);probe.remove();
+    return{resolved,normalized,surface:styles.backgroundColor,text:styles.color,font:styles.fontFamily};
+  },expected);
+  assert.deepEqual(actual.resolved,actual.normalized,'resolved public tokens equal the existing host palette');
+  assert.equal(actual.surface,actual.normalized.surface);assert.equal(actual.text,actual.normalized.text);
+  assert(actual.font.includes(expected['font-family'].split(',')[0].replace(/["']/g,'')),'host font is used');
+  return actual;
+}
+
 async function navigation(page, run) {
   const host = page.locator('ro-suite-nav'), button = host.locator('button'), panel = host.locator('#tools');
   await check(run.id + '-navbar-theme-identity-and-keyboard', async () => {
     await page.reload(); await settle(page); await page.waitForFunction(() => Boolean(document.querySelector('ro-suite-nav')?.shadowRoot));
+    run.hostTheme=await assertHostTheme(page);
     assert.equal(await host.getAttribute('tool-id'), 'best-status'); assert.equal(await host.getAttribute('theme'), 'dark');
     assert.equal(await host.locator('.current').innerText(), 'Best Status');
     const info = await host.evaluate(e => ({ theme: getComputedStyle(e).colorScheme, previous: e.previousElementSibling?.className, next: (() => { let next = e.nextElementSibling; while (next?.tagName === 'SCRIPT') next = next.nextElementSibling; return next?.className; })(), current: [...e.shadowRoot.querySelectorAll('[aria-current="page"]')].map(a => ({ text: a.textContent, href: a.href })), hrefs: [...e.shadowRoot.querySelectorAll('a')].map(a => a.href), button: (() => { const r = e.shadowRoot.querySelector('button').getBoundingClientRect(); return { width: r.width, height: r.height }; })() }));
@@ -308,6 +329,7 @@ async function runOne(server, mode, width, preference, base) {
     }, page);
     if (mode === 'blocked') await check(run.id + '-actual-module-block-and-fallback', async () => {
       assert(run.blockedNavRequests > 0, 'Actual nav.js request was intercepted and aborted'); assert.equal(await page.evaluate(() => Boolean(document.querySelector('ro-suite-nav').shadowRoot)), false);
+      run.hostTheme=await assertHostTheme(page);
       const fallback = page.locator('ro-suite-nav > nav > a'); assert(await fallback.isVisible()); assert.equal(await fallback.getAttribute('href'), PORTAL);
       const rect = await fallback.boundingBox(); assert(rect.width >= 44 && rect.height >= 44); assert(rect.x >= 0 && rect.x + rect.width <= width + 1);
       if ([390, 1440].includes(width)) await screenshot(page, run.id + '-fallback-top');

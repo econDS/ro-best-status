@@ -10,6 +10,7 @@ ro-suite-nav.best-status-suite-nav {
   --ro-suite-font-family: "Noto Sans Thai","Leelawadee UI",Tahoma,system-ui,-apple-system,sans-serif;
 }
 ro-suite-nav.best-status-suite-nav > nav {
+  background: var(--ro-suite-surface);
   color: var(--ro-suite-text);
   font-family: var(--ro-suite-font-family);
 }
