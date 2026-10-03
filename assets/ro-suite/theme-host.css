@@ -1,0 +1,26 @@
+/* Host-owned palette from existing app CSS. No shadow-DOM overrides or geometry changes. */
+ro-suite-nav.best-status-suite-nav {
+  --ro-suite-surface: var(--panel);
+  --ro-suite-surface-hover: var(--panel2);
+  --ro-suite-text: var(--text);
+  --ro-suite-muted: var(--muted);
+  --ro-suite-border: var(--line);
+  --ro-suite-accent: var(--mint);
+  --ro-suite-focus: var(--mint);
+  --ro-suite-font-family: "Noto Sans Thai","Leelawadee UI",Tahoma,system-ui,-apple-system,sans-serif;
+}
+ro-suite-nav.best-status-suite-nav > nav {
+  color: var(--ro-suite-text);
+  font-family: var(--ro-suite-font-family);
+}
+ro-suite-nav.best-status-suite-nav > nav > a {
+  color: var(--ro-suite-accent);
+  font-family: var(--ro-suite-font-family);
+}
+ro-suite-nav.best-status-suite-nav > nav > a:hover {
+  background: var(--ro-suite-surface-hover);
+}
+ro-suite-nav.best-status-suite-nav > nav > a:focus-visible {
+  outline: 3px solid var(--ro-suite-focus);
+  outline-offset: 2px;
+}

@@ -15,7 +15,7 @@ const BASE_ROOT = process.env.BASE_ROOT && path.resolve(process.env.BASE_ROOT);
 const OUTPUT = path.resolve(process.env.QA_OUTPUT || path.join(ROOT, 'qa-artifacts'));
 const PREFIX = '/ro-best-status/';
 const SUFFIX = '?qa=preserve%20me&repeat=a&repeat=b#qa-sentinel';
-const NAV_PATH = 'assets/ro-suite/1.4.1/nav.js';
+const NAV_PATH = 'assets/ro-suite/1.5.0/nav.js';
 const PIN = '1.55.1';
 const PORTAL = 'https://econds.github.io/ro_tools_portal/';
 const SELF = 'https://econds.github.io/ro-best-status/';
