@@ -30,6 +30,130 @@
   </style>
   <link rel="stylesheet" href="./assets/ro-suite/nav140-host.css">
   <link rel="stylesheet" href="./assets/ro-suite/theme-host.css">
+  <style id="readability">
+    /* Readability pass: content text is never below 12px (decorative caps labels 10px). Presentation only. */
+    body { font-size: 15px; }
+    .brand small,
+    .budget-box strong small,
+    .eyebrow,
+    .muted,
+    .stat-field { font-size: 10px; }
+    .activity-skill,
+    .activity-subtitle,
+    .allocated-stat dd small,
+    .allocated-stat dt,
+    .allocation-heading,
+    .assumptions summary,
+    .bonus-breakdown table,
+    .bonus-breakdown thead th,
+    .bonus-breakdown>p,
+    .bonus-breakdown>span,
+    .bonus-details summary,
+    .bonus-source-note,
+    .budget-box>span,
+    .budget-foot,
+    .card-points,
+    .card-warning,
+    .checkbox-label small,
+    .comparison-label,
+    .custom-budget-toggle,
+    .field-hint,
+    .formula-details .field-hint,
+    .formula-grid label,
+    .formula-group legend>span,
+    .hero-tags,
+    .insight-box p,
+    .locked-body p,
+    .method-intro p,
+    .notice,
+    .notice a,
+    .panel-heading p,
+    .privacy-note,
+    .profile-change,
+    .profile-context,
+    .profile-context small,
+    .profile-fields input,
+    .profile-fields label,
+    .profile-fields select,
+    .profile-hint,
+    .profile-source,
+    .profile-source p,
+    .profiles-heading>span,
+    .rate-improvement .thai-label,
+    .raw-label,
+    .recommended-label,
+    .result-status,
+    .results-bottom,
+    .results-caption,
+    .results-heading .eyebrow,
+    .segmented-control span,
+    .site-footer,
+    .site-footer>span:last-child,
+    .site-header nav,
+    .source-caution,
+    .stats-section>.field-hint,
+    .strategy-section>.field-hint,
+    .text-button,
+    .unlock-button { font-size: 12px; }
+    .assumptions>div,
+    .checkbox-label,
+    .form-error,
+    .formula-group legend,
+    .insight-box h3,
+    .locked-body h4,
+    .method-step p,
+    .migration-notice button,
+    .migration-notice p,
+    .notice-icon,
+    .profile-control legend,
+    label { font-size: 13px; }
+
+    /* hero: shorter so the planner is reachable on first view */
+    .hero { min-height: 0; padding: 18px 0 20px; }
+    h1 { font-size: clamp(34px, 3.6vw, 46px); line-height: 1.25; }
+    .hero p { font-size: 16px; line-height: 1.7; }
+    .hero-tags { margin-top: 14px; }
+    .hero-art { width: 280px; margin: -6px 24px -6px 0; }
+
+    /* start panel: tidy link row instead of an orphan separator dot */
+    .first-run-links { display: flex; flex-wrap: wrap; gap: 8px 16px; }
+    .first-run-links a { display: inline-flex; align-items: center; min-height: 44px; padding: 8px 4px; }
+    .first-run-links a:focus-visible { outline: 3px solid #a9f3d6; outline-offset: 3px; }
+    .first-run-options { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .first-run-options label { font-size: 13px; padding: 8px 10px; }
+
+    /* ---- round 2: remaining shorthand sizes, contrast, touch targets, result hierarchy ---- */
+    .rate-improvement { font-size: 13px; }
+    .rate-improvement .thai-label { font-size: 12px; opacity: .9; }
+    .card-timing { font-size: 11px; color: #93aab4; }
+    .card-timing span { color: #a6bbc4; }
+    .allocation-heading span { font-size: 11px; color: #93aab4; }
+    .stat-field { font-size: 12px; }
+    .art-caption { font-size: 10px; }
+    .privacy-note { color: #9db2bb; }
+    .site-footer { color: #93aab4; }
+    .site-footer span { color: #93aab4; }
+    .footer-separator { color: #6f8e9c; }
+
+    /* touch targets: 44px for links, summaries and buttons, 40px for fields */
+    .site-header nav a, .notice a, .text-button { display: inline-flex; align-items: center; min-height: 44px; }
+    summary { padding-block: 12px; }
+    .icon-button { width: 40px; height: 40px; line-height: 38px; }
+    .checkbox-label { min-height: 44px; align-items: center; }
+    input[type="number"], select { min-height: 40px; }
+
+    /* result hierarchy: the best rate leads, recommended stats follow, tables stay quiet */
+    .recommended-label { font-size: 14px; color: #c0cbd0; margin-top: 20px; }
+    .big-rate { font-size: clamp(44px, 4.2vw, 64px); }
+    .big-rate.is-range { font-size: clamp(32px, 3.4vw, 48px); }
+    .big-rate small { font-size: 26px; }
+    .allocated-stat dd { font-size: 28px; }
+    .allocated-stat.relevant dd { font-size: 34px; }
+    @media (max-width: 720px) {
+      .allocated-stat dd { font-size: 24px; }
+      .allocated-stat.relevant dd { font-size: 28px; }
+    }
+  </style>
 </head>
 <body>
   <a class="skip-link" href="#planner">ข้ามไปเครื่องคำนวณ</a>
@@ -84,7 +208,7 @@
       <legend>เริ่มตรงนี้: วันนี้จะคราฟต์อะไร?</legend>
       <p>เลือกกิจกรรม → ตั้งค่าตัวละคร → ดูสเตตัสแนะนำ</p>
       <div class="first-run-options"><label><input type="radio" name="first-activity" value="rune" checked> Rune · สร้างรูน</label><label><input type="radio" name="first-activity" value="poison"> Poison · สร้างพิษ</label><label><input type="radio" name="first-activity" value="potion"> Potion · ปรุงยา</label><label><input type="radio" name="first-activity" value="all"> เปรียบเทียบทั้งหมด</label></div>
-      <a href="#planner-form">ตั้งค่าตัวละคร ↓</a> · <a href="#results-panel">ดูผลและเลือกอาชีพ ↓</a>
+      <div class="first-run-links"><a href="#planner-form">ตั้งค่าตัวละคร ↓</a><a href="#results-panel">ดูผลและเลือกอาชีพ ↓</a></div>
     </fieldset>
 
         <form id="planner-form" novalidate>

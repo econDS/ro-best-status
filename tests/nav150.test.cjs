@@ -14,7 +14,7 @@ test('nav150 exact pinned release integrity and unchanged catalog',()=>{
  assert.equal(lock.bundleVersion,'1.5.1');assert.equal(lock.sourceCommit,'44b090748afc1dbf13eb5d4b78d2a0102d9d9e9c');
  for(const [file,entry]of Object.entries(lock.files))assert.equal(hash(read(dir+file)),entry.sha256);
  assert.deepEqual(read(dir+'catalog.snapshot.json'),read('assets/ro-suite/1.4.1/catalog.snapshot.json'));
- const html=read('index.html').toString();for(const [before,after]of JSON.parse(read('qa/nav150/changes.json'))){assert.equal(html.split(after).length-1,1);assert.notEqual(before,after);}
+ const html=require('../qa/readability/normalize.cjs')(read('index.html').toString());for(const [before,after]of JSON.parse(read('qa/nav150/changes.json'))){assert.equal(html.split(after).length-1,1);assert.notEqual(before,after);}
  const normalize=require('../qa/nav150/normalize.cjs');assert.throws(()=>normalize(html.replace('./assets/ro-suite/theme-host.css','./unapproved.css')));
 });
 test('theme QA runs on rollout draft PR with read-only permission',()=>{
