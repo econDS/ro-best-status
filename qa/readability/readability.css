@@ -88,3 +88,35 @@
     .first-run-links a:focus-visible { outline: 3px solid #a9f3d6; outline-offset: 3px; }
     .first-run-options { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); }
     .first-run-options label { font-size: 13px; padding: 8px 10px; }
+
+    /* ---- round 2: remaining shorthand sizes, contrast, touch targets, result hierarchy ---- */
+    .rate-improvement { font-size: 13px; }
+    .rate-improvement .thai-label { font-size: 12px; opacity: .9; }
+    .card-timing { font-size: 11px; color: #93aab4; }
+    .card-timing span { color: #a6bbc4; }
+    .allocation-heading span { font-size: 11px; color: #93aab4; }
+    .stat-field { font-size: 12px; }
+    .art-caption { font-size: 10px; }
+    .privacy-note { color: #9db2bb; }
+    .site-footer { color: #93aab4; }
+    .site-footer span { color: #93aab4; }
+    .footer-separator { color: #6f8e9c; }
+
+    /* touch targets: 44px for links, summaries and buttons, 40px for fields */
+    .site-header nav a, .notice a, .text-button { display: inline-flex; align-items: center; min-height: 44px; }
+    summary { padding-block: 12px; }
+    .icon-button { width: 40px; height: 40px; line-height: 38px; }
+    .checkbox-label { min-height: 44px; align-items: center; }
+    input[type="number"], select { min-height: 40px; }
+
+    /* result hierarchy: the best rate leads, recommended stats follow, tables stay quiet */
+    .recommended-label { font-size: 14px; color: #c0cbd0; margin-top: 20px; }
+    .big-rate { font-size: clamp(44px, 4.2vw, 64px); }
+    .big-rate.is-range { font-size: clamp(32px, 3.4vw, 48px); }
+    .big-rate small { font-size: 26px; }
+    .allocated-stat dd { font-size: 28px; }
+    .allocated-stat.relevant dd { font-size: 34px; }
+    @media (max-width: 720px) {
+      .allocated-stat dd { font-size: 24px; }
+      .allocated-stat.relevant dd { font-size: 28px; }
+    }

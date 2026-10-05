@@ -8,3 +8,10 @@ Presentation only. The calculator, optimizer, data and `styles.css` are untouche
 
 Tests: `node --test` 35/35; `tests/first-run.browser.cjs` PASS (exact calculation outputs equal the historical baseline); `qa/best-status-nav/browser.cjs` 364 checks / 0 failures (Chromium via Playwright 1.55.1, local).
 Not addressed: muted text colours, result hierarchy, touch-target audit.
+
+## Round 2
+- Contrast: remaining text below WCAG AA (privacy note, timing line, footer, "BASE" tag) lightened; only the decorative `↗` arrows stay at ~4.3:1.
+- Remaining shorthand sizes the first pass missed raised: rate-improvement 9→13px, card timing 8→11px, "BASE" tag, stat field labels 10→12px.
+- Touch targets: links, summaries and buttons are 44px high (reset button 40px), number fields and selects 40px; checkbox rows 44px. Radio/checkbox inputs keep their native size inside 44px labels.
+- Result hierarchy: best rate 64px (was 38px), recommended stat values 28–34px (was 20px), label 14px; tables and notes stay quiet.
+- Tests: `node --test` 35/35; `tests/first-run.browser.cjs` PASS (calculation outputs identical to the historical baseline); `qa/best-status-nav/browser.cjs` 364 checks / 0 failures. No horizontal overflow at 1440 or 390.

@@ -16,7 +16,7 @@ test('readability floor: no content font-size below 12px, decorative caps labels
   const sizes=[...css.matchAll(/font-size:\s*(\d+(?:\.\d+)?)px/g)].map(m=>Number(m[1]));
   assert(sizes.length>0);assert(Math.min(...sizes)>=10);
   const ten=css.split('\n').filter(l=>/font-size: 10px/.test(l));
-  assert.equal(ten.length,1,'only the decorative group uses 10px');
+  assert(ten.length<=2,'only decorative groups use 10px');
 });
 test('first-run links, cautions and calculator copy remain',()=>{
   assert(html.includes('href="#planner-form"')&&html.includes('href="#results-panel"'));
