@@ -1,7 +1,7 @@
 'use strict';
 const test=require('node:test'),assert=require('node:assert/strict'),fs=require('node:fs'),path=require('node:path'),crypto=require('node:crypto');
 const root=path.resolve(__dirname,'..'),read=p=>fs.readFileSync(path.join(root,p)),hash=b=>crypto.createHash('sha256').update(b).digest('hex');
-const baseline=JSON.parse(read('qa/nav140/baseline.json')),html=require('../qa/nav150/normalize.cjs')(read('index.html').toString()),normalize=require('../qa/nav140/normalize.cjs');
+const baseline=JSON.parse(read('qa/nav140/baseline.json')),html=require('../qa/nav150/normalize.cjs')(require('../qa/readability/normalize.cjs')(read('index.html').toString())),normalize=require('../qa/nav140/normalize.cjs');
 test('nav140 reverses exactly to untouched latest main, preserving every original app/first-run byte',()=>{
  assert.equal(hash(normalize(html)),baseline.files['index.html']);
  for(const [file,expected]of Object.entries(baseline.files))if(!baseline.allowedModifiedFiles.includes(file))assert.equal(hash(read(file)),expected,file);
