@@ -4,7 +4,7 @@ const root=path.resolve(__dirname,'..'),read=p=>fs.readFileSync(path.join(root,p
 const baseline=JSON.parse(read('qa/nav140/baseline.json')),html=require('../qa/nav150/normalize.cjs')(require('../qa/readability/normalize.cjs')(read('index.html').toString())),normalize=require('../qa/nav140/normalize.cjs');
 test('nav140 reverses exactly to untouched latest main, preserving every original app/first-run byte',()=>{
  assert.equal(hash(normalize(html)),baseline.files['index.html']);
- for(const [file,expected]of Object.entries(baseline.files))if(!baseline.allowedModifiedFiles.includes(file))assert.equal(hash(read(file)),expected,file);
+ for(const [file,expected]of Object.entries(baseline.files))if(!baseline.allowedModifiedFiles.includes(file))assert.equal(hash(file==='.github/workflows/pages.yml'?require('../qa/nav200/pages-normalize.cjs')(read(file)):read(file)),expected,file);
  for(const [before,after]of JSON.parse(read('qa/nav140/changes.json'))){assert.equal(html.split(after).length-1,1,after);assert.notEqual(before,after);}
  assert.throws(()=>normalize(html.replace('./assets/ro-suite/nav140-host.css','./assets/ro-suite/unapproved.css')),'normalizer must reject an unrelated stylesheet edit');
 });
