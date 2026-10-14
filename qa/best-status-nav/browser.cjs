@@ -15,7 +15,8 @@ const BASE_ROOT = process.env.BASE_ROOT && path.resolve(process.env.BASE_ROOT);
 const OUTPUT = path.resolve(process.env.QA_OUTPUT || path.join(ROOT, 'qa-artifacts'));
 const PREFIX = '/ro-best-status/';
 const SUFFIX = '?qa=preserve%20me&repeat=a&repeat=b#qa-sentinel';
-const NAV_PATH = 'assets/ro-suite/1.5.1/nav.js';
+const NAV_PATH = 'assets/ro-suite/2.0.0/nav.js';
+const CATALOG = 'https://econds.github.io/ro_tools_portal/catalog/v1/tools.json';
 const PIN = '1.55.1';
 const PORTAL = 'https://econds.github.io/ro_tools_portal/';
 const SELF = 'https://econds.github.io/ro-best-status/';
@@ -265,12 +266,13 @@ async function navigation(page, run) {
     await page.keyboard.press('Tab'); assert.equal((await active(page)).href, PORTAL); assert.notEqual((await active(page)).outline, 'none');
     await page.keyboard.press('Tab'); assert.equal((await active(page)).tag, 'BUTTON'); assert.notEqual((await active(page)).outline, 'none');
     await page.keyboard.press('Enter'); assert.equal(await button.getAttribute('aria-expanded'), 'true'); assert(await panel.isVisible());
+    await page.keyboard.press('Tab'); assert.equal((await active(page)).tag, 'INPUT');
     await page.keyboard.press('Tab'); assert.equal((await active(page)).href, DESTINATIONS[1]);
     await page.keyboard.press('Escape'); assert.equal(await button.getAttribute('aria-expanded'), 'false'); assert.equal((await active(page)).tag, 'BUTTON'); assert(!(await panel.isVisible()));
     await page.keyboard.press('Space'); assert(await panel.isVisible()); await page.keyboard.press('Space'); assert(!(await panel.isVisible()));
     for (let i = 0; i < 5; i++) { await button.click(); assert(await panel.isVisible()); await button.click(); assert(!(await panel.isVisible())); }
     await button.click();
-    const links = await panel.locator('a').count(); for (let i = 0; i < links + 1; i++) await page.keyboard.press('Tab');
+    const links = await panel.locator('a').count(); for (let i = 0; i < links + 2; i++) await page.keyboard.press('Tab');
     assert.equal((await active(page)).class, 'brand'); assert(!(await panel.isVisible()), 'Tab exits normally and closes menu');
     await sentinel(page, run);
   }, page);
@@ -314,6 +316,7 @@ async function runOne(server, mode, width, preference, base) {
   await context.route('**/*', async route => {
     const request = route.request(), url = request.url();
     if (mode === 'blocked' && url === server.origin + PREFIX + NAV_PATH) { run.blockedNavRequests++; await route.abort('failed'); }
+    else if (url === CATALOG) await route.fulfill({status:200,contentType:'application/json',body:fs.readFileSync(path.join(ROOT,'assets/ro-suite/2.0.0/catalog.snapshot.json'),'utf8')});
     else if (request.isNavigationRequest() && DESTINATIONS.includes(url)) await route.fulfill({ status: 200, contentType: 'text/html', body: '<!doctype html><title>QA destination</title><body>QA destination</body>' });
     else await route.continue();
   });
@@ -342,7 +345,7 @@ async function runOne(server, mode, width, preference, base) {
       run.diagnosticSignatures = diagnosticSignatures(run);
       if (base) assert.deepEqual(run.diagnosticSignatures, base.diagnosticSignatures, 'No added console, request, HTTP or page errors versus actual original');
       if (mode === 'blocked') assert(run.intentionalNavFailure.requests.length > 0, 'The expected aborted module request is recorded');
-      assert.equal(run.diagnostics.requests.some(r => /catalog\/v1\/tools\.json/.test(r.url)), false, 'Pinned nav never fetches a remote catalog');
+      assert.equal(run.diagnostics.requests.some(r => r.url === CATALOG), mode === 'candidate', 'Only the loaded v2 component automatically fetches the exact central catalog');
     }, page);
   } catch (e) { fail(run.id + '-setup-or-run', e); await screenshot(page, run.id + '-fatal').catch(() => {}); }
   finally { await context.close(); save(); }
